@@ -49,7 +49,7 @@ def main():
         result = generate_npc(spec)
     elif intent == "building":
         # Note: We'll need to add brief mode to the building generator later if desired.
-        spec = BuildingSpec(world_name=args.world, prompt=args.prompt)
+        spec = BuildingSpec(world_name=args.world, prompt=args.prompt, brief=args.brief)
         result = generate_building(spec)
     else:
         result = f"Sorry, I'm not sure how to handle that request. I can currently generate 'npc' or 'building'."

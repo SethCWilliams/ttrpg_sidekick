@@ -8,6 +8,7 @@ import os
 from pydantic import BaseModel, Field
 from openai import OpenAI
 from core.llm_service import llm_service
+from core.text_utils import clean_sheet
 
 NPC_TEMPLATE_FULL = """
 🧾 NPC Template: (Full)
@@ -90,29 +91,14 @@ NPC_TEMPLATE_BRIEF = """
   •Quirks:
 """
 
-def _clean_npc_sheet(raw_text: str) -> str:
-    """
-    Cleans up common artifacts and conversational filler from the model's raw output.
-    """
-    lines = raw_text.strip().split('\\n')
-    
-    # List of known filler phrases to remove from the output
-    filler_phrases = [
-        "Here is the NPC template filled out",
-        "NPC Template Fully Spun",
-        "An Elixir for Storycrafting",
-        "Combat & Mechanical (Optional Crafting) Complete!",
-        "Oh, behold the enigmatic"
-    ]
-    
-    # Filter out lines containing any of the filler phrases
-    cleaned_lines = [
-        line for line in lines if not any(phrase in line for phrase in filler_phrases)
-    ]
-    
-    # Re-join the lines and remove any leading/trailing whitespace
-    return '\\n'.join(cleaned_lines).strip()
-
+# NPC-specific filler phrases to remove
+NPC_FILLER_PHRASES = [
+    "Here is the NPC template filled out",
+    "NPC Template Fully Spun",
+    "An Elixir for Storycrafting",
+    "Combat & Mechanical (Optional Crafting) Complete!",
+    "Oh, behold the enigmatic"
+]
 
 class NPCSpec(BaseModel):
     """Input specification for NPC generation."""
@@ -165,7 +151,7 @@ Now, take that idea and fill out this template completely. Be creative and make 
         )
         
         raw_sheet = response.choices[0].message.content
-        cleaned_sheet = _clean_npc_sheet(raw_sheet)
+        cleaned_sheet = clean_sheet(raw_sheet, NPC_FILLER_PHRASES)
         return cleaned_sheet
 
 
