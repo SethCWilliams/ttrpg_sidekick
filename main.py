@@ -28,6 +28,7 @@ def main():
     parser = argparse.ArgumentParser(description="AI-powered assistant for TTRPGs.")
     parser.add_argument("prompt", type=str, help="Your creative prompt for what you want to generate.")
     parser.add_argument("--world", type=str, default="Forgotten Realms", help="The name of the campaign world for context.")
+    parser.add_argument("--brief", action="store_true", help="Generate a brief, slimmed-down version of the output.")
     
     args = parser.parse_args()
 
@@ -39,12 +40,15 @@ def main():
     intent = routed_request.get("intent")
 
     print(f"🔎 Intent Detected: {intent.upper()}")
+    if args.brief:
+        print("📜 Brief mode enabled")
 
     # 2. Call the appropriate generator
     if intent == "npc":
-        spec = NPCSpec(world_name=args.world, prompt=args.prompt)
+        spec = NPCSpec(world_name=args.world, prompt=args.prompt, brief=args.brief)
         result = generate_npc(spec)
     elif intent == "building":
+        # Note: We'll need to add brief mode to the building generator later if desired.
         spec = BuildingSpec(world_name=args.world, prompt=args.prompt)
         result = generate_building(spec)
     else:

@@ -7,11 +7,9 @@ Generates detailed NPCs with names, races, classes, motives, secrets, and dialog
 import os
 from pydantic import BaseModel, Field
 from openai import OpenAI
-from core.memory import MemoryService
 
-# The user's detailed NPC template
-NPC_TEMPLATE = """
-🧾 NPC Template: Structured for Depth & Usability
+NPC_TEMPLATE_FULL = """
+🧾 NPC Template: (Full)
 
 📌 1. Quick Overview (at-a-glance info for DMs)
   • Name:
@@ -65,6 +63,32 @@ NPC_TEMPLATE = """
   • Special abilities or gear:
 """
 
+NPC_TEMPLATE_BRIEF = """
+🧾 NPC Template (Brief)
+
+📌 1. Quick Overview
+  •Name:
+  •Race / Species:
+  •Occupation / Role:
+  •Brief Personality Tagline:
+  •One interesting thing you know about them:
+  •Voice inspiration:
+
+⸻
+
+👀 2. Appearance & Vibe
+  •Physical traits:
+  •Clothing / Gear:
+
+⸻
+
+🧠 3. Personality & Social Profile
+  •Core traits:
+  •Motivations:
+  •Fears:
+  •Quirks:
+"""
+
 def _clean_npc_sheet(raw_text: str) -> str:
     """
     Cleans up common artifacts and conversational filler from the model's raw output.
@@ -93,6 +117,7 @@ class NPCSpec(BaseModel):
     """Input specification for NPC generation."""
     world_name: str = Field(..., description="Name of the world/campaign")
     prompt: str = Field(..., description="A freeform text prompt describing the NPC.")
+    brief: bool = Field(False, description="Whether to generate a brief version of the sheet.")
 
 
 class NPCGeneratorAgent:
@@ -125,6 +150,9 @@ class NPCGeneratorAgent:
         """
         system_prompt = "You are a silent and efficient TTRPG assistant. Your only job is to fill out the provided character sheet template using the user's prompt. You must fill out the template directly. Do not add any extra comments, introductions, or sign-offs. Your response should only contain the filled-out template."
         
+        # Choose the template based on the 'brief' flag
+        template = NPC_TEMPLATE_BRIEF if input_spec.brief else NPC_TEMPLATE_FULL
+        
         user_prompt = f"""
 Please create an NPC based on the following idea:
 ---
@@ -133,7 +161,7 @@ USER PROMPT: "{input_spec.prompt}"
 
 Now, take that idea and fill out this template completely. Be creative and make the character come alive.
 
-{NPC_TEMPLATE}
+{template}
 """
         
         response = self.client.chat.completions.create(
