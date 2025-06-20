@@ -1,0 +1,34 @@
+# TTRPG Sidekick Environment Configuration
+# Copy this file to .envrc and fill in your actual values
+
+# --- Provider Selection ---
+# Set the provider to "ollama" to use a local model, or "openai" for the API.
+export API_PROVIDER="ollama"
+
+
+# --- Ollama Configuration (if API_PROVIDER="ollama") ---
+export OLLAMA_BASE_URL="http://localhost:11434/v1"
+export OLLAMA_MODEL="llama3" # Highest quality local model. 'phi3' is much faster but less detailed.
+
+
+# --- OpenAI Configuration (if API_PROVIDER="openai") ---
+# You can get a key from https://platform.openai.com/api-keys
+export OPENAI_API_KEY="sk-your-openai-api-key-here"
+export OPENAI_MODEL="gpt-4o"
+
+
+# --- Project Configuration ---
+export TTRPG_DATA_DIR="data"
+export TTRPG_WORLDS_DIR="data/worlds"
+export TTRPG_RULESETS_DIR="data/rulesets"
+
+# --- Development Settings ---
+export PYTHONPATH="${PWD}:${PYTHONPATH}"
+
+# --- Virtual Environment Setup ---
+# This will automatically create and activate a virtual environment
+layout python3
+
+# Optional: Other API keys you might need later
+# export NOTION_API_KEY="your-notion-api-key"
+# export NOTION_DATABASE_ID="your-notion-database-id" 

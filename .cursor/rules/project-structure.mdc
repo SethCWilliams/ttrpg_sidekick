@@ -1,0 +1,36 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Project Structure and Conventions
+
+This is an extensible AI TTRPG Sidekick that generates NPCs, quests, magic items, buildings, battlefields, session recaps, and character backstories for tabletop RPGs.
+
+## Development Philosophy
+- Features should be modular
+- Each folder in `features/` represents a plugin that takes structured input and returns structured output
+- The `core/` folder contains shared services like memory, rules, logging, and prompt templates
+
+## Key Components
+
+### Core Files
+- `main.py`: Entry point that routes input via `router.py` to the appropriate feature module
+- `router.py`: Maps user commands or request payloads to the appropriate feature module. Easily extensible
+
+### Core Services
+- `core/memory.py`: Handles world-specific memory. Tracks all generated lore/NPCs/etc. per world and allows resets or context switching
+- `core/rule_engine.py`: Looks up and explains RPG rules using SRD data in `data/rulesets/`. Can be queried with natural language
+- `core/notion_logger.py`: Pushes structured content (NPCs, quests, etc.) to Notion when user sends `!log`
+
+### Feature Modules
+- `features/*/agent.py`: Feature modules that implement `generate(input)` and return structured results
+- Input/output should be Pydantic models when possible
+
+### Data Structure
+- `data/worlds/`: Stores per-world campaign data (memory, settings, logs)
+- `data/rulesets/`: Holds structured rulesets like the 5e SRD for rule parsing and lookups
+
+### Interfaces
+- `interface/api.py`: Exposes a FastAPI server for the agent. Each feature can be hit via its own route
+- `interface/cli.py`: Command-line interface for using the sidekick locally, passing prompts or commands

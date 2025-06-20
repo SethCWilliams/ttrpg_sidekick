@@ -1,0 +1,32 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Code Style and Formatting
+
+## Python Conventions
+- Use type hints for all function parameters and return values
+- Follow PEP 8 style guide
+- Maximum line length: 100 characters
+- Use 4 spaces for indentation
+- Use double quotes for strings
+- Use Pydantic models for structured data
+
+## Module Organization
+- Each feature module should be self-contained
+- Core services should be stateless when possible
+- Use dependency injection for service dependencies
+- Keep functions focused and single-purpose
+
+## Documentation
+- Use Google-style docstrings
+- Include type information in docstrings
+- Document all public functions and classes
+- Include usage examples for complex functions
+
+## Testing
+- Write unit tests for all core functionality
+- Use pytest for testing
+- Mock external dependencies
+- Include integration tests for feature modules
