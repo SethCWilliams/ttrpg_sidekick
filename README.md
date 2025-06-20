@@ -109,6 +109,7 @@ ttrpg_sidekick/
 │   ├── memory.py          # World memory management
 │   ├── rule_engine.py     # RPG rules lookup
 │   └── notion_logger.py   # Notion integration
+│   └── llm_service.py     # Centralized LLM client management
 ├── features/              # Feature modules
 │   └── npc_generator/     # NPC generation
 │       └── agent.py       # NPC generator agent
@@ -123,6 +124,16 @@ ttrpg_sidekick/
 ├── setup.sh             # Automated setup script
 └── test_npc_generator.py # Test script
 ```
+
+## How It Works
+
+The TTRPG Sidekick uses a simple but powerful architecture to understand and respond to user requests:
+
+1.  **Entry Point (`main.py`):** The main script captures the user's free-form prompt from the command line.
+2.  **LLM Service (`core/llm_service.py`):** A centralized singleton service initializes the language model client (either local Ollama or cloud OpenAI) based on the `.envrc` configuration. This client is then shared across the application.
+3.  **Router (`router.py`):** The user's prompt is sent to the `Router`, which uses the LLM to perform a single task: classify the user's intent (e.g., 'npc', 'building').
+4.  **Generator Agent (`features/.../agent.py`):** Based on the detected intent, the main script calls the appropriate generator agent.
+5.  **Template Filling:** The agent combines the user's prompt with a detailed template and sends it to the LLM to be creatively filled out. The final, formatted text is then returned to the user.
 
 ## How to Use
 

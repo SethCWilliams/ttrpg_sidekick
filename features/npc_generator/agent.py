@@ -7,6 +7,7 @@ Generates detailed NPCs with names, races, classes, motives, secrets, and dialog
 import os
 from pydantic import BaseModel, Field
 from openai import OpenAI
+from core.llm_service import llm_service
 
 NPC_TEMPLATE_FULL = """
 🧾 NPC Template: (Full)
@@ -124,19 +125,8 @@ class NPCGeneratorAgent:
     """Agent for generating detailed NPCs by filling out a template."""
     
     def __init__(self):
-        api_provider = os.getenv("API_PROVIDER", "openai").lower()
-
-        if api_provider == "ollama":
-            print("🤖 Using Ollama provider")
-            self.client = OpenAI(
-                base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1"),
-                api_key="ollama",  # required but unused
-            )
-            self.model = os.getenv("OLLAMA_MODEL", "llama3")
-        else:
-            print("☁️ Using OpenAI provider")
-            self.client = OpenAI()
-            self.model = os.getenv("OPENAI_MODEL", "gpt-4o")
+        self.client = llm_service.client
+        self.model = llm_service.model
 
     def generate_npc_sheet(self, input_spec: NPCSpec) -> str:
         """
