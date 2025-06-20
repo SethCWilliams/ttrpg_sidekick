@@ -3,9 +3,10 @@ import os
 from pydantic import BaseModel, Field
 from openai import OpenAI
 from core.llm_service import llm_service
+from core.text_utils import clean_sheet
 
 # A detailed template for generating buildings
-BUILDING_TEMPLATE = """
+BUILDING_TEMPLATE_FULL = """
 🏰 Building Profile: A Comprehensive Location Guide
 
 📌 1. At a Glance (Quick DM Info)
@@ -48,17 +49,45 @@ BUILDING_TEMPLATE = """
   •	What's *really* going on here?: (The underlying truth of the location)
 """
 
-def _clean_building_sheet(raw_text: str) -> str:
-    """Cleans up common artifacts and conversational filler from the model's raw output."""
-    lines = raw_text.strip().split('\\n')
-    cleaned_lines = [line for line in lines if "Here is the" not in line and "template filled out" not in line]
-    return '\\n'.join(cleaned_lines).strip()
+# A new, brief version of the template
+BUILDING_TEMPLATE_BRIEF = """
+🏰 Building Profile (Brief)
 
+📌 1. At a Glance
+	•	Building Name:
+	•	Primary Function:
+	•	Location:
+	•	Key Figure / Proprietor:
+	•	General Vibe:
+
+⸻
+
+👀 2. Sensory Details
+	•	First Impression (What you see):
+	•	Dominant Smells:
+	•	Ambient Sounds:
+
+⸻
+
+🎲 4. Inhabitants & Roleplay Hooks
+	•	The Proprietor:
+	•	Potential Quests / Jobs:
+	•	What the party can get here:
+"""
+
+# Building-specific filler phrases to remove
+BUILDING_FILLER_PHRASES = [
+    "Here is the building profile",
+    "Here is the building template filled out", 
+    "Building Profile: A Comprehensive Location Guide",
+    "Of course, here is the filled-out template"
+]
 
 class BuildingSpec(BaseModel):
     """Input specification for building generation."""
     world_name: str = Field(..., description="Name of the world/campaign")
     prompt: str = Field(..., description="A freeform text prompt describing the building.")
+    brief: bool = Field(False, description="Whether to generate a brief version of the sheet.")
 
 
 class BuildingGeneratorAgent:
@@ -70,8 +99,11 @@ class BuildingGeneratorAgent:
 
     def generate_building_sheet(self, input_spec: BuildingSpec) -> str:
         """Generates a detailed building sheet based on a freeform prompt."""
-        system_prompt = "You are a master TTRPG storyteller and worldbuilder. Your task is to take a user's prompt and creatively fill out a detailed location sheet. Embellish and invent details where the user has been sparse. The goal is a rich, interesting, and usable location for a game master. Your response should only contain the filled-out template."
+        system_prompt = "You are a silent and efficient TTRPG assistant. Your only job is to fill out the provided location sheet template using the user's prompt. You must fill out the template directly. Do not add any extra comments, introductions, or sign-offs. Your response should only contain the filled-out template."
         
+        # Choose the template based on the 'brief' flag
+        template = BUILDING_TEMPLATE_BRIEF if input_spec.brief else BUILDING_TEMPLATE_FULL
+
         user_prompt = f"""
 Please create a building based on the following idea:
 ---
@@ -80,7 +112,7 @@ USER PROMPT: "{input_spec.prompt}"
 
 Now, take that idea and fill out this template completely. Be creative and make the location come alive.
 
-{BUILDING_TEMPLATE}
+{template}
 """
         
         response = self.client.chat.completions.create(
@@ -89,12 +121,14 @@ Now, take that idea and fill out this template completely. Be creative and make 
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            temperature=0.8, # Slightly lower temp for more coherent structure
+            temperature=0.8,
             max_tokens=2500,
         )
         
         raw_sheet = response.choices[0].message.content
-        cleaned_sheet = _clean_building_sheet(raw_sheet)
+        print('DEBUG: Raw LLM response:', repr(raw_sheet))  # Debug print
+        cleaned_sheet = clean_sheet(raw_sheet, BUILDING_FILLER_PHRASES)
+        print('DEBUG: Cleaned sheet:', repr(cleaned_sheet))  # Debug print
         return cleaned_sheet
 
 
