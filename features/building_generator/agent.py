@@ -2,6 +2,7 @@ from typing import Optional
 import os
 from pydantic import BaseModel, Field
 from openai import OpenAI
+from core.llm_service import llm_service
 
 # A detailed template for generating buildings
 BUILDING_TEMPLATE = """
@@ -64,17 +65,8 @@ class BuildingGeneratorAgent:
     """Agent for generating detailed buildings by filling out a template."""
     
     def __init__(self):
-        api_provider = os.getenv("API_PROVIDER", "openai").lower()
-
-        if api_provider == "ollama":
-            self.client = OpenAI(
-                base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1"),
-                api_key="ollama",
-            )
-            self.model = os.getenv("OLLAMA_MODEL", "llama3")
-        else:
-            self.client = OpenAI()
-            self.model = os.getenv("OPENAI_MODEL", "gpt-4o")
+        self.client = llm_service.client
+        self.model = llm_service.model
 
     def generate_building_sheet(self, input_spec: BuildingSpec) -> str:
         """Generates a detailed building sheet based on a freeform prompt."""

@@ -1,5 +1,5 @@
 import os
-from openai import OpenAI
+from core.llm_service import llm_service
 
 class Router:
     """
@@ -8,17 +8,9 @@ class Router:
     """
 
     def __init__(self):
-        api_provider = os.getenv("API_PROVIDER", "openai").lower()
-
-        if api_provider == "ollama":
-            self.client = OpenAI(
-                base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1"),
-                api_key="ollama",
-            )
-            self.model = os.getenv("OLLAMA_MODEL", "llama3")
-        else:
-            self.client = OpenAI()
-            self.model = os.getenv("OPENAI_MODEL", "gpt-4o")
+        # The client is now managed by the shared service
+        self.client = llm_service.client
+        self.model = llm_service.model
 
     def route_request(self, user_prompt: str) -> dict:
         """
