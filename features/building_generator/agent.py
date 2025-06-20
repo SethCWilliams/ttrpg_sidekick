@@ -126,9 +126,7 @@ Now, take that idea and fill out this template completely. Be creative and make 
         )
         
         raw_sheet = response.choices[0].message.content
-        print('DEBUG: Raw LLM response:', repr(raw_sheet))  # Debug print
         cleaned_sheet = clean_sheet(raw_sheet, BUILDING_FILLER_PHRASES)
-        print('DEBUG: Cleaned sheet:', repr(cleaned_sheet))  # Debug print
         return cleaned_sheet
 
 

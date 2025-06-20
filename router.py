@@ -33,9 +33,23 @@ class Router:
         Returns a dictionary containing the 'intent' and the original 'prompt'.
         """
         system_prompt = """
-You are the master router for a TTRPG content generation tool. Your only job is to analyze the user's prompt and determine which tool they need.
-You must classify the user's request into one of the following categories: 'npc', 'building', or 'unknown'.
-Your response MUST be a single, valid JSON object in the following format: {"intent": "your_classification"}
+You are the master router for a TTRPG content generation tool. Your job is to analyze the user's prompt and determine which generator they need.
+
+CLASSIFY AS 'building' if the prompt:
+- Contains building names (e.g., "The Dirty Clam", "Red Dragon Inn", "Wizard's Tower")
+- Mentions locations, establishments, or venues (e.g., "tavern", "shop", "library", "guild hall", "temple")
+- Describes a place or structure (e.g., "abandoned warehouse", "magical bookstore", "thief hideout")
+- Uses words like: inn, tavern, shop, store, tower, castle, mansion, house, building, establishment, venue, location
+
+CLASSIFY AS 'npc' if the prompt:
+- Contains character names or descriptions (e.g., "Gandalf", "wise old wizard", "merchant")
+- Mentions people, characters, or individuals (e.g., "villain", "hero", "merchant", "guard")
+- Describes personality traits or roles (e.g., "charismatic leader", "shy apprentice", "brave warrior")
+- Uses words like: person, character, individual, npc, merchant, wizard, warrior, rogue, etc.
+
+CLASSIFY AS 'unknown' only if the prompt is unclear or doesn't fit either category.
+
+Your response MUST be a single, valid JSON object: {"intent": "your_classification"}
 Do not add any other text, explanation, or markdown.
 """
         
