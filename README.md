@@ -2,21 +2,6 @@
 
 An extensible AI TTRPG Sidekick that generates NPCs, quests, magic items, buildings, battlefields, session recaps, and character backstories for tabletop RPGs.
 
-## Features
-
-- **NPC Generator**: Create detailed NPCs with motives, secrets, and dialogue
-- **Quest Generator**: Generate compelling quests with objectives, rewards, and story hooks
-- **Magic Item Generator**: Design unique magical artifacts with properties, lore, and mechanics
-- **Building Generator**: Create detailed locations and establishments
-- **Battlefield Generator**: Design tactical combat environments with terrain and hazards
-- **Character Backstory Generator**: Create rich character histories and personal development
-- **Modular Architecture**: Each feature is a separate plugin
-- **World Memory**: Persistent storage for campaign data
-- **Structured Output**: All data uses Pydantic models for type safety
-- **Smart Routing**: Automatically detects what type of content you want to generate
-- **Explicit Qualifiers**: Use prefixes to explicitly specify content type
-- **Local Model Support**: Use Ollama for local AI models or OpenAI for cloud models
-
 ## Quick Start
 
 ### Prerequisites
@@ -90,68 +75,52 @@ An extensible AI TTRPG Sidekick that generates NPCs, quests, magic items, buildi
    python test_backstory_generator.py
    ```
 
-### Setting Up Local Models (Optional)
-
-If you prefer to use local models instead of OpenAI:
-
-1. **Install Ollama:**
-   ```bash
-   # macOS (with Homebrew)
-   brew install ollama
-   
-   # Linux
-   curl -fsSL https://ollama.ai/install.sh | sh
-   ```
-
-2. **Start Ollama service:**
-   ```bash
-   ollama serve
-   ```
-
-3. **Download a model:**
-   ```bash
-   ollama pull llama3
-   ```
-
-4. **Configure your environment:**
-   ```bash
-   # In .envrc
-   export API_PROVIDER="ollama"
-   export OLLAMA_MODEL="llama3"
-   ```
-
-## Virtual Environment
-
-This project uses `direnv` to automatically manage a virtual environment. When you enter the project directory:
-
-- A virtual environment is automatically created (if it doesn't exist)
-- The virtual environment is automatically activated
-- Environment variables are loaded
-- Dependencies are available
-
-When you leave the project directory, the virtual environment is automatically deactivated.
-
-### Manual Virtual Environment (Alternative)
-
-If you prefer to manage the virtual environment manually:
+### Basic Usage
 
 ```bash
-# Create virtual environment
-python3 -m venv venv
+# Automatic detection
+python main.py "a grumpy dwarf blacksmith named Borin"
 
-# Activate virtual environment
-source venv/bin/activate  # On macOS/Linux
-# or
-venv\Scripts\activate     # On Windows
+# Explicit control with qualifiers
+python main.py "/npc a young wizard who was orphaned"
+python main.py "/backstory a young wizard who was orphaned"
+python main.py "/quest find the missing crown"
+python main.py "/building a seaside tavern"
+python main.py "/magic_item a sword that controls fire"
+python main.py "/battlefield a narrow mountain pass"
 
-# Install dependencies
-pip install -r requirements.txt
-
-# Set environment variables manually
-export OPENAI_API_KEY="your-api-key-here"
+# With world context and brief mode
+python main.py "/npc a merchant" --world "Eberron" --brief
 ```
 
-## Project Structure
+## Project Overview
+
+### Features
+
+- **NPC Generator**: Create detailed NPCs with motives, secrets, and dialogue
+- **Quest Generator**: Generate compelling quests with objectives, rewards, and story hooks
+- **Magic Item Generator**: Design unique magical artifacts with properties, lore, and mechanics
+- **Building Generator**: Create detailed locations and establishments
+- **Battlefield Generator**: Design tactical combat environments with terrain and hazards
+- **Character Backstory Generator**: Create rich character histories and personal development
+- **Modular Architecture**: Each feature is a separate plugin
+- **World Memory**: Persistent storage for campaign data
+- **Structured Output**: All data uses Pydantic models for type safety
+- **Smart Routing**: Automatically detects what type of content you want to generate
+- **Explicit Qualifiers**: Use prefixes to explicitly specify content type
+- **Local Model Support**: Use Ollama for local AI models or OpenAI for cloud models
+
+### How It Works
+
+The TTRPG Sidekick uses a simple but powerful architecture to understand and respond to user requests:
+
+1. **Entry Point (`main.py`):** The main script captures the user's free-form prompt from the command line.
+2. **LLM Service (`core/llm_service.py`):** A centralized singleton service initializes the language model client (either local Ollama or cloud OpenAI) based on the `.envrc` configuration. This client is then shared across the application.
+3. **Router (`router.py`):** The user's prompt is sent to the `Router`, which first checks for explicit qualifiers, then uses the LLM to classify the user's intent if no qualifier is found.
+4. **Generator Agent (`features/.../agent.py`):** Based on the detected intent, the main script calls the appropriate generator agent.
+5. **Template Filling:** The agent combines the user's prompt with a detailed template and sends it to the LLM to be creatively filled out. The final, formatted text is then returned to the user.
+
+### Project Structure
 
 ```
 ttrpg_sidekick/
@@ -194,45 +163,25 @@ ttrpg_sidekick/
 └── test_backstory_generator.py # Backstory generator tests
 ```
 
-## How It Works
+### Available Generators
 
-The TTRPG Sidekick uses a simple but powerful architecture to understand and respond to user requests:
+#### NPC Generator
+Creates detailed NPCs with name, race, class, motives, secrets, sample dialogue, appearance, personality, and background story.
 
-1. **Entry Point (`main.py`):** The main script captures the user's free-form prompt from the command line.
-2. **LLM Service (`core/llm_service.py`):** A centralized singleton service initializes the language model client (either local Ollama or cloud OpenAI) based on the `.envrc` configuration. This client is then shared across the application.
-3. **Router (`router.py`):** The user's prompt is sent to the `Router`, which first checks for explicit qualifiers, then uses the LLM to classify the user's intent if no qualifier is found.
-4. **Generator Agent (`features/.../agent.py`):** Based on the detected intent, the main script calls the appropriate generator agent.
-5. **Template Filling:** The agent combines the user's prompt with a detailed template and sends it to the LLM to be creatively filled out. The final, formatted text is then returned to the user.
+#### Quest Generator
+Creates compelling adventures with quest objectives, rewards, consequences, story hooks, plot points, NPCs involved, locations, and challenges.
 
-## How to Use
+#### Magic Item Generator
+Designs unique artifacts with item properties, abilities, combat mechanics, bonuses, lore, history, roleplay hooks, personality, and balance considerations.
 
-The TTRPG Sidekick is run from the command line. The main script is `main.py`, which takes your creative prompt as its primary argument.
+#### Building Generator
+Creates detailed locations with physical description, atmosphere, layout, key areas, inhabitants, staff, roleplay opportunities, secrets, and history.
 
-### Basic Usage
+#### Battlefield Generator
+Creates tactical combat environments with physical layout, terrain features, environmental hazards, cover options, tactical considerations, chokepoints, combat zones, objectives, forces, and deployment options.
 
-```bash
-python main.py "YOUR PROMPT HERE"
-```
-
-The application will automatically detect what type of content you want to create and generate a detailed sheet for you.
-
-### Explicit Qualifiers
-
-For precise control over what type of content is generated, use qualifiers:
-
-```bash
-# Explicit NPC generation
-python main.py "/npc a young wizard who was orphaned and discovered magical powers"
-
-# Explicit backstory generation  
-python main.py "/backstory a young wizard who was orphaned and discovered magical powers"
-
-# Other qualifiers
-python main.py "/quest find the missing crown"
-python main.py "/building a seaside tavern called The Salty Siren"
-python main.py "/magic_item a sword that controls fire"
-python main.py "/battlefield a narrow mountain pass where armies clash"
-```
+#### Character Backstory Generator
+Creates rich character histories with personal history, formative experiences, relationships, connections, goals, motivations, fears, skills development, abilities, and future aspirations.
 
 ### Available Qualifiers
 
@@ -244,102 +193,6 @@ python main.py "/battlefield a narrow mountain pass where armies clash"
 | `/building` | Generate buildings/locations |
 | `/magic_item` | Generate magic items |
 | `/battlefield` | Generate battlefields |
-
-### Examples
-
-**Automatic Detection:**
-```bash
-# These will be automatically classified
-python main.py "a grumpy dwarf blacksmith named Borin"
-python main.py "a seaside tavern called 'The Salty Siren'"
-python main.py "find the missing crown of the ancient king"
-python main.py "a sword that can control fire and was forged by a dragon"
-python main.py "a narrow mountain pass where two armies must clash"
-python main.py "a young wizard who was orphaned and discovered magical powers"
-```
-
-**Explicit Control:**
-```bash
-# Force NPC generation even if it sounds like a backstory
-python main.py "/npc a young wizard who was orphaned and discovered magical powers"
-
-# Force backstory generation even if it sounds like an NPC
-python main.py "/backstory a grumpy dwarf blacksmith named Borin"
-```
-
-### Specifying a World
-
-You can also provide a campaign world name for context, which can help the AI generate more relevant content.
-
-```bash
-python main.py "a mysterious wizard's tower" --world "Eberron"
-python main.py "/backstory a noble's child who ran away" --world "Ravenloft"
-```
-
-### Brief Mode
-
-For quicker, more concise output, use the `--brief` flag:
-
-```bash
-python main.py "a magic ring" --brief
-python main.py "/npc a simple merchant" --brief
-```
-
-## Usage
-
-### NPC Generator
-
-The NPC generator creates detailed NPCs with the following information:
-- Name, race, and class
-- Motives and secrets
-- Sample dialogue
-- Appearance and personality
-- Background story
-
-### Quest Generator
-
-The quest generator creates compelling adventures with:
-- Quest objectives and goals
-- Rewards and consequences
-- Story hooks and plot points
-- NPCs involved
-- Locations and challenges
-
-### Magic Item Generator
-
-The magic item generator designs unique artifacts with:
-- Item properties and abilities
-- Combat mechanics and bonuses
-- Lore and history
-- Roleplay hooks and personality
-- Balance considerations
-
-### Building Generator
-
-The building generator creates detailed locations with:
-- Physical description and atmosphere
-- Layout and key areas
-- Inhabitants and staff
-- Roleplay opportunities
-- Secrets and history
-
-### Battlefield Generator
-
-The battlefield generator creates tactical combat environments with:
-- Physical layout and terrain features
-- Environmental hazards and cover options
-- Tactical considerations and chokepoints
-- Combat zones and objectives
-- Forces and deployment options
-
-### Character Backstory Generator
-
-The backstory generator creates rich character histories with:
-- Personal history and formative experiences
-- Relationships and connections
-- Goals, motivations, and fears
-- Skills development and abilities
-- Future aspirations and destiny
 
 ### Programmatic Usage
 
@@ -400,6 +253,146 @@ backstory_spec = BackstorySpec(
 backstory = generate_backstory(backstory_spec)
 ```
 
+## Helpful Information
+
+### Setting Up Local Models
+
+If you prefer to use local models instead of OpenAI:
+
+1. **Install Ollama:**
+   ```bash
+   # macOS (with Homebrew)
+   brew install ollama
+   
+   # Linux
+   curl -fsSL https://ollama.ai/install.sh | sh
+   ```
+
+2. **Start Ollama service:**
+   ```bash
+   ollama serve
+   ```
+
+3. **Download a model:**
+   ```bash
+   ollama pull llama3
+   ```
+
+4. **Configure your environment:**
+   ```bash
+   # In .envrc
+   export API_PROVIDER="ollama"
+   export OLLAMA_MODEL="llama3"
+   ```
+
+### Local Model Selection
+
+When using local models, you have several options with different performance and quality trade-offs:
+
+#### Model Comparison
+
+| Model | Size | Quality | Speed | Memory | Best For |
+|-------|------|---------|-------|--------|----------|
+| **llama3** | ~4GB | High | Medium | 8GB+ | Best overall quality |
+| **llama3.2** | ~4GB | Very High | Medium | 8GB+ | Latest and greatest |
+| **phi3** | ~2GB | Good | Fast | 4GB+ | Good balance |
+| **phi3.5** | ~2GB | Very Good | Fast | 4GB+ | Best value |
+| **mistral** | ~4GB | High | Medium | 8GB+ | Good reasoning |
+| **codellama** | ~4GB | High | Medium | 8GB+ | Code-focused tasks |
+
+#### Performance Considerations
+
+**Memory Requirements:**
+- **4GB models** (llama3, llama3.2, mistral): Require 8GB+ RAM for optimal performance
+- **2GB models** (phi3, phi3.5): Work well with 4GB+ RAM
+- **Larger models** may require 16GB+ RAM for smooth operation
+
+**Speed vs Quality Trade-offs:**
+- **Faster models** (phi3, phi3.5): Generate responses quickly but may have less depth
+- **Slower models** (llama3, llama3.2): Take longer but produce more detailed and coherent content
+- **Quality models**: Better at following templates and maintaining consistency
+
+**Hardware Recommendations:**
+- **Minimum**: 4GB RAM, any modern CPU
+- **Recommended**: 8GB+ RAM, recent CPU (2018+)
+- **Optimal**: 16GB+ RAM, recent CPU with good single-thread performance
+
+#### Model-Specific Recommendations
+
+**For TTRPG Content Generation:**
+- **llama3.2**: Best overall quality for creative writing and template following
+- **phi3.5**: Excellent balance of speed and quality for most use cases
+- **llama3**: Reliable fallback with good template adherence
+
+**For Different Use Cases:**
+- **Quick generation**: Use phi3 or phi3.5
+- **High-quality output**: Use llama3.2 or llama3
+- **Limited resources**: Use phi3 (smallest footprint)
+- **Best value**: Use phi3.5 (good quality, reasonable speed)
+
+#### Switching Models
+
+To try different models:
+
+```bash
+# Download a new model
+ollama pull phi3.5
+
+# Update your configuration
+export OLLAMA_MODEL="phi3.5"
+
+# Test the new model
+python main.py "/npc a wise old wizard"
+```
+
+#### Troubleshooting Performance
+
+**If responses are slow:**
+- Try a smaller model (phi3 instead of llama3)
+- Ensure you have adequate RAM available
+- Close other memory-intensive applications
+
+**If quality is poor:**
+- Switch to a larger model (llama3.2 instead of phi3)
+- Check that the model downloaded completely
+- Ensure you have enough RAM for the model
+
+**If you get memory errors:**
+- Use a smaller model
+- Increase your system's swap/virtual memory
+- Close other applications to free up RAM
+
+### Virtual Environment
+
+This project uses `direnv` to automatically manage a virtual environment. When you enter the project directory:
+
+- A virtual environment is automatically created (if it doesn't exist)
+- The virtual environment is automatically activated
+- Environment variables are loaded
+- Dependencies are available
+
+When you leave the project directory, the virtual environment is automatically deactivated.
+
+### Manual Virtual Environment (Alternative)
+
+If you prefer to manage the virtual environment manually:
+
+```bash
+# Create virtual environment
+python3 -m venv venv
+
+# Activate virtual environment
+source venv/bin/activate  # On macOS/Linux
+# or
+venv\Scripts\activate     # On Windows
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Set environment variables manually
+export OPENAI_API_KEY="your-api-key-here"
+```
+
 ### Environment Variables
 
 The following environment variables can be configured in `.envrc`:
@@ -419,9 +412,9 @@ The following environment variables can be configured in `.envrc`:
 - `TTRPG_WORLDS_DIR`: World data directory (default: "data/worlds")
 - `TTRPG_RULESETS_DIR`: Rulesets directory (default: "data/rulesets")
 
-## Development
+### Development
 
-### Adding New Features
+#### Adding New Features
 
 1. Create a new directory in `features/`
 2. Implement an `agent.py` with a generator class and convenience function
@@ -430,7 +423,7 @@ The following environment variables can be configured in `.envrc`:
 5. Update `main.py` to handle the new generator
 6. Create a test file following the existing pattern
 
-### Code Style
+#### Code Style
 
 - Use type hints for all functions
 - Follow PEP 8 style guide
@@ -438,9 +431,9 @@ The following environment variables can be configured in `.envrc`:
 - Write docstrings for all public functions
 - Include both full and brief templates for generators
 
-## Troubleshooting
+### Troubleshooting
 
-### Virtual Environment Issues
+#### Virtual Environment Issues
 
 If you encounter issues with the virtual environment:
 
@@ -454,7 +447,7 @@ If you encounter issues with the virtual environment:
    direnv reload
    ```
 
-### Environment Variables Not Loading
+#### Environment Variables Not Loading
 
 If environment variables aren't loading:
 
@@ -468,7 +461,7 @@ If environment variables aren't loading:
    direnv allow
    ```
 
-### API Issues
+#### API Issues
 
 If you're having trouble with the API:
 
@@ -482,7 +475,7 @@ If you're having trouble with the API:
    curl http://localhost:11434/v1/models
    ```
 
-### Ollama Issues
+#### Ollama Issues
 
 If you're having trouble with Ollama:
 
@@ -505,7 +498,3 @@ If you're having trouble with Ollama:
    ```bash
    ollama pull llama3
    ```
-
-## License
-
-[Your License Here] 
