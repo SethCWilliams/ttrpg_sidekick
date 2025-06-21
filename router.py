@@ -68,6 +68,13 @@ CLASSIFY AS 'battlefield' if the prompt:
 - Uses words like: battlefield, arena, battleground, war zone, combat zone, siege, ambush, skirmish, battle, fight, war, tactical, strategic, etc.
 - Contains phrases about combat environments (e.g., "place where armies clash", "location for a battle", "tactical position", "defensive terrain")
 
+CLASSIFY AS 'backstory' if the prompt:
+- Contains character backstory elements (e.g., "orphaned at a young age", "trained by a master", "survived a tragedy")
+- Mentions personal history or life events (e.g., "grew up in poverty", "lost their family", "discovered their powers")
+- Describes character origins or background (e.g., "former soldier", "street urchin", "noble's child")
+- Uses words like: backstory, background, history, past, origin, childhood, family, tragedy, loss, training, mentor, etc.
+- Contains phrases about character development (e.g., "how they became who they are", "what shaped their personality", "their life before adventuring")
+
 CLASSIFY AS 'unknown' only if the prompt is unclear or doesn't fit any category.
 
 Your response MUST be a single, valid JSON object: {"intent": "your_classification"}
@@ -89,7 +96,7 @@ Do not add any other text, explanation, or markdown.
         intent = parsed_json.get("intent", "unknown").lower().strip()
 
         # Basic validation to ensure it's one of the expected intents
-        if intent not in ['npc', 'building', 'quest', 'magic_item', 'battlefield']:
+        if intent not in ['npc', 'building', 'quest', 'magic_item', 'battlefield', 'backstory']:
             intent = 'unknown'
 
         return {
