@@ -8,10 +8,13 @@ An extensible AI TTRPG Sidekick that generates NPCs, quests, magic items, buildi
 - **Quest Generator**: Generate compelling quests with objectives, rewards, and story hooks
 - **Magic Item Generator**: Design unique magical artifacts with properties, lore, and mechanics
 - **Building Generator**: Create detailed locations and establishments
+- **Battlefield Generator**: Design tactical combat environments with terrain and hazards
+- **Character Backstory Generator**: Create rich character histories and personal development
 - **Modular Architecture**: Each feature is a separate plugin
 - **World Memory**: Persistent storage for campaign data
 - **Structured Output**: All data uses Pydantic models for type safety
 - **Smart Routing**: Automatically detects what type of content you want to generate
+- **Explicit Qualifiers**: Use prefixes to explicitly specify content type
 - **Local Model Support**: Use Ollama for local AI models or OpenAI for cloud models
 
 ## Quick Start
@@ -83,6 +86,8 @@ An extensible AI TTRPG Sidekick that generates NPCs, quests, magic items, buildi
    python test_npc_generator.py
    python test_quest_generator.py
    python test_magic_item_generator.py
+   python test_battlefield_generator.py
+   python test_backstory_generator.py
    ```
 
 ### Setting Up Local Models (Optional)
@@ -167,8 +172,10 @@ ttrpg_sidekick/
 │   │   └── agent.py       # Magic item generator agent
 │   ├── building_generator/ # Building generation
 │   │   └── agent.py       # Building generator agent
-│   ├── backstories/       # Character backstory generation
 │   ├── battlefields/      # Battlefield generation
+│   │   └── agent.py       # Battlefield generator agent
+│   ├── backstories/       # Character backstory generation
+│   │   └── agent.py       # Backstory generator agent
 │   └── recaps/           # Session recap generation
 ├── data/                  # Data storage
 │   ├── worlds/           # World-specific data
@@ -183,7 +190,8 @@ ttrpg_sidekick/
 ├── test_npc_generator.py # NPC generator tests
 ├── test_quest_generator.py # Quest generator tests
 ├── test_magic_item_generator.py # Magic item generator tests
-└── test_building_generator.py # Building generator tests
+├── test_battlefield_generator.py # Battlefield generator tests
+└── test_backstory_generator.py # Backstory generator tests
 ```
 
 ## How It Works
@@ -192,7 +200,7 @@ The TTRPG Sidekick uses a simple but powerful architecture to understand and res
 
 1. **Entry Point (`main.py`):** The main script captures the user's free-form prompt from the command line.
 2. **LLM Service (`core/llm_service.py`):** A centralized singleton service initializes the language model client (either local Ollama or cloud OpenAI) based on the `.envrc` configuration. This client is then shared across the application.
-3. **Router (`router.py`):** The user's prompt is sent to the `Router`, which uses the LLM to perform a single task: classify the user's intent (e.g., 'npc', 'building', 'quest', 'magic_item').
+3. **Router (`router.py`):** The user's prompt is sent to the `Router`, which first checks for explicit qualifiers, then uses the LLM to classify the user's intent if no qualifier is found.
 4. **Generator Agent (`features/.../agent.py`):** Based on the detected intent, the main script calls the appropriate generator agent.
 5. **Template Filling:** The agent combines the user's prompt with a detailed template and sends it to the LLM to be creatively filled out. The final, formatted text is then returned to the user.
 
@@ -208,31 +216,55 @@ python main.py "YOUR PROMPT HERE"
 
 The application will automatically detect what type of content you want to create and generate a detailed sheet for you.
 
+### Explicit Qualifiers
+
+For precise control over what type of content is generated, use qualifiers:
+
+```bash
+# Explicit NPC generation
+python main.py "/npc a young wizard who was orphaned and discovered magical powers"
+
+# Explicit backstory generation  
+python main.py "/backstory a young wizard who was orphaned and discovered magical powers"
+
+# Other qualifiers
+python main.py "/quest find the missing crown"
+python main.py "/building a seaside tavern called The Salty Siren"
+python main.py "/magic_item a sword that controls fire"
+python main.py "/battlefield a narrow mountain pass where armies clash"
+```
+
+### Available Qualifiers
+
+| Qualifier | Purpose |
+|-----------|---------|
+| `/npc` | Generate NPCs |
+| `/backstory` | Generate character backstories |
+| `/quest` | Generate quests |
+| `/building` | Generate buildings/locations |
+| `/magic_item` | Generate magic items |
+| `/battlefield` | Generate battlefields |
+
 ### Examples
 
-**To generate an NPC:**
+**Automatic Detection:**
 ```bash
+# These will be automatically classified
 python main.py "a grumpy dwarf blacksmith named Borin"
-```
-
-**To generate a Building:**
-```bash
 python main.py "a seaside tavern called 'The Salty Siren'"
-```
-
-**To generate a Quest:**
-```bash
 python main.py "find the missing crown of the ancient king"
-```
-
-**To generate a Magic Item:**
-```bash
 python main.py "a sword that can control fire and was forged by a dragon"
+python main.py "a narrow mountain pass where two armies must clash"
+python main.py "a young wizard who was orphaned and discovered magical powers"
 ```
 
-**To generate more detailed content:**
+**Explicit Control:**
 ```bash
-python main.py "Create Osperado, the half-elf banker with a missing leg. He's secretly a member of the city's thieves' guild."
+# Force NPC generation even if it sounds like a backstory
+python main.py "/npc a young wizard who was orphaned and discovered magical powers"
+
+# Force backstory generation even if it sounds like an NPC
+python main.py "/backstory a grumpy dwarf blacksmith named Borin"
 ```
 
 ### Specifying a World
@@ -241,6 +273,7 @@ You can also provide a campaign world name for context, which can help the AI ge
 
 ```bash
 python main.py "a mysterious wizard's tower" --world "Eberron"
+python main.py "/backstory a noble's child who ran away" --world "Ravenloft"
 ```
 
 ### Brief Mode
@@ -249,6 +282,7 @@ For quicker, more concise output, use the `--brief` flag:
 
 ```bash
 python main.py "a magic ring" --brief
+python main.py "/npc a simple merchant" --brief
 ```
 
 ## Usage
@@ -289,6 +323,24 @@ The building generator creates detailed locations with:
 - Roleplay opportunities
 - Secrets and history
 
+### Battlefield Generator
+
+The battlefield generator creates tactical combat environments with:
+- Physical layout and terrain features
+- Environmental hazards and cover options
+- Tactical considerations and chokepoints
+- Combat zones and objectives
+- Forces and deployment options
+
+### Character Backstory Generator
+
+The backstory generator creates rich character histories with:
+- Personal history and formative experiences
+- Relationships and connections
+- Goals, motivations, and fears
+- Skills development and abilities
+- Future aspirations and destiny
+
 ### Programmatic Usage
 
 ```python
@@ -296,6 +348,8 @@ from features.npc_generator.agent import NPCSpec, generate_npc
 from features.quest_generator.agent import QuestSpec, generate_quest
 from features.magic_items.agent import MagicItemSpec, generate_magic_item
 from features.building_generator.agent import BuildingSpec, generate_building
+from features.battlefields.agent import BattlefieldSpec, generate_battlefield
+from features.backstories.agent import BackstorySpec, generate_backstory
 
 # Generate an NPC
 npc_spec = NPCSpec(
@@ -328,6 +382,22 @@ building_spec = BuildingSpec(
     brief=False
 )
 building = generate_building(building_spec)
+
+# Generate a battlefield
+battlefield_spec = BattlefieldSpec(
+    world_name="Forgotten Realms",
+    prompt="a narrow mountain pass where armies clash",
+    brief=False
+)
+battlefield = generate_battlefield(battlefield_spec)
+
+# Generate a backstory
+backstory_spec = BackstorySpec(
+    world_name="Forgotten Realms",
+    prompt="a young wizard who was orphaned and discovered magical powers",
+    brief=False
+)
+backstory = generate_backstory(backstory_spec)
 ```
 
 ### Environment Variables

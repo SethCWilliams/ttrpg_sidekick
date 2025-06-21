@@ -32,6 +32,34 @@ class Router:
 
         Returns a dictionary containing the 'intent' and the original 'prompt'.
         """
+        # Check for explicit qualifiers first
+        qualifier_pattern = r'^/(\w+)\s+(.+)$'
+        match = re.match(qualifier_pattern, user_prompt.strip())
+        
+        if match:
+            qualifier = match.group(1).lower()
+            actual_prompt = match.group(2).strip()
+            
+            # Map qualifiers to intents
+            qualifier_map = {
+                'npc': 'npc',
+                'backstory': 'backstory', 
+                'quest': 'quest',
+                'building': 'building',
+                'magic_item': 'magic_item',
+                'battlefield': 'battlefield'
+            }
+            
+            if qualifier in qualifier_map:
+                return {
+                    "intent": qualifier_map[qualifier],
+                    "prompt": actual_prompt
+                }
+            else:
+                # Unknown qualifier, fall back to AI classification
+                print(f"⚠️  Unknown qualifier '/{qualifier}'. Using AI classification instead.")
+        
+        # If no qualifier or unknown qualifier, use AI classification
         system_prompt = """
 You are the master router for a TTRPG content generation tool. Your job is to analyze the user's prompt and determine which generator they need.
 
