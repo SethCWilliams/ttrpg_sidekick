@@ -47,7 +47,13 @@ CLASSIFY AS 'npc' if the prompt:
 - Describes personality traits or roles (e.g., "charismatic leader", "shy apprentice", "brave warrior")
 - Uses words like: person, character, individual, npc, merchant, wizard, warrior, rogue, etc.
 
-CLASSIFY AS 'unknown' only if the prompt is unclear or doesn't fit either category.
+CLASSIFY AS 'quest' if the prompt:
+- Contains quest titles or mission names (e.g., "The Lost Artifact", "Rescue the Princess", "Clear the Dungeon")
+- Mentions missions, tasks, or objectives (e.g., "find the missing", "rescue", "investigate", "retrieve")
+- Describes adventures or challenges (e.g., "dangerous journey", "mysterious disappearance", "ancient curse")
+- Uses words like: quest, mission, adventure, task, objective, journey, rescue, find, investigate, retrieve, clear, defeat, etc.
+
+CLASSIFY AS 'unknown' only if the prompt is unclear or doesn't fit any category.
 
 Your response MUST be a single, valid JSON object: {"intent": "your_classification"}
 Do not add any other text, explanation, or markdown.
@@ -68,7 +74,7 @@ Do not add any other text, explanation, or markdown.
         intent = parsed_json.get("intent", "unknown").lower().strip()
 
         # Basic validation to ensure it's one of the expected intents
-        if intent not in ['npc', 'building']:
+        if intent not in ['npc', 'building', 'quest']:
             intent = 'unknown'
 
         return {

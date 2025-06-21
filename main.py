@@ -9,6 +9,7 @@ import os
 from router import Router
 from features.npc_generator.agent import NPCSpec, generate_npc
 from features.building_generator.agent import BuildingSpec, generate_building
+from features.quest_generator.agent import QuestSpec, generate_quest
 
 def check_environment():
     """Checks for the necessary environment variables."""
@@ -48,11 +49,13 @@ def main():
         spec = NPCSpec(world_name=args.world, prompt=args.prompt, brief=args.brief)
         result = generate_npc(spec)
     elif intent == "building":
-        # Note: We'll need to add brief mode to the building generator later if desired.
         spec = BuildingSpec(world_name=args.world, prompt=args.prompt, brief=args.brief)
         result = generate_building(spec)
+    elif intent == "quest":
+        spec = QuestSpec(world_name=args.world, prompt=args.prompt, brief=args.brief)
+        result = generate_quest(spec)
     else:
-        result = f"Sorry, I'm not sure how to handle that request. I can currently generate 'npc' or 'building'."
+        result = f"Sorry, I'm not sure how to handle that request. I can currently generate 'npc', 'building', or 'quest'."
 
     # 3. Print the result
     print("-" * 50)
