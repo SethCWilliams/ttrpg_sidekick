@@ -49,9 +49,17 @@ CLASSIFY AS 'npc' if the prompt:
 
 CLASSIFY AS 'quest' if the prompt:
 - Contains quest titles or mission names (e.g., "The Lost Artifact", "Rescue the Princess", "Clear the Dungeon")
-- Mentions missions, tasks, or objectives (e.g., "find the missing", "rescue", "investigate", "retrieve")
+- Mentions missions, tasks, or objectives (e.g., "find the missing", "rescue", "investigate", "retrieve", "finding", "searching", "looking for")
 - Describes adventures or challenges (e.g., "dangerous journey", "mysterious disappearance", "ancient curse")
-- Uses words like: quest, mission, adventure, task, objective, journey, rescue, find, investigate, retrieve, clear, defeat, etc.
+- Uses words like: quest, mission, adventure, task, objective, journey, rescue, find, investigate, retrieve, clear, defeat, search, locate, discover, hunt, track, pursue, etc.
+- Contains phrases about searching, finding, or locating something (e.g., "finding the needle", "searching for treasure", "looking for clues")
+
+CLASSIFY AS 'magic_item' if the prompt:
+- Contains item names or descriptions (e.g., "Sword of Fire", "Ring of Invisibility", "Staff of Power")
+- Mentions magical objects, weapons, armor, or artifacts (e.g., "magic sword", "enchanted ring", "cursed amulet", "legendary weapon")
+- Describes magical properties or effects (e.g., "sword that shoots lightning", "ring that makes you invisible", "staff that controls weather")
+- Uses words like: magic item, artifact, weapon, armor, ring, amulet, staff, wand, sword, dagger, bow, shield, etc.
+- Contains phrases about magical abilities or enchantments (e.g., "item that grants flight", "weapon that deals extra damage", "armor that protects from fire")
 
 CLASSIFY AS 'unknown' only if the prompt is unclear or doesn't fit any category.
 
@@ -74,7 +82,7 @@ Do not add any other text, explanation, or markdown.
         intent = parsed_json.get("intent", "unknown").lower().strip()
 
         # Basic validation to ensure it's one of the expected intents
-        if intent not in ['npc', 'building', 'quest']:
+        if intent not in ['npc', 'building', 'quest', 'magic_item']:
             intent = 'unknown'
 
         return {

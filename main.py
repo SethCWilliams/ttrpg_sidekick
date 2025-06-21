@@ -10,6 +10,7 @@ from router import Router
 from features.npc_generator.agent import NPCSpec, generate_npc
 from features.building_generator.agent import BuildingSpec, generate_building
 from features.quest_generator.agent import QuestSpec, generate_quest
+from features.magic_items.agent import MagicItemSpec, generate_magic_item
 
 def check_environment():
     """Checks for the necessary environment variables."""
@@ -54,8 +55,11 @@ def main():
     elif intent == "quest":
         spec = QuestSpec(world_name=args.world, prompt=args.prompt, brief=args.brief)
         result = generate_quest(spec)
+    elif intent == "magic_item":
+        spec = MagicItemSpec(world_name=args.world, prompt=args.prompt, brief=args.brief)
+        result = generate_magic_item(spec)
     else:
-        result = f"Sorry, I'm not sure how to handle that request. I can currently generate 'npc', 'building', or 'quest'."
+        result = f"Sorry, I'm not sure how to handle that request. I can currently generate 'npc', 'building', 'quest', or 'magic_item'."
 
     # 3. Print the result
     print("-" * 50)
