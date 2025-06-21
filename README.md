@@ -12,14 +12,15 @@ An extensible AI TTRPG Sidekick that generates NPCs, quests, magic items, buildi
 - **World Memory**: Persistent storage for campaign data
 - **Structured Output**: All data uses Pydantic models for type safety
 - **Smart Routing**: Automatically detects what type of content you want to generate
+- **Local Model Support**: Use Ollama for local AI models or OpenAI for cloud models
 
 ## Quick Start
 
 ### Prerequisites
 
 - Python 3.8+
-- OpenAI API key (or Ollama for local models)
 - direnv (recommended for environment management)
+- OpenAI API key (for cloud models) OR Ollama (for local models)
 
 ### Installation
 
@@ -37,7 +38,10 @@ An extensible AI TTRPG Sidekick that generates NPCs, quests, magic items, buildi
    ```
 
    This will:
-   - Check prerequisites
+   - Check prerequisites (direnv, Python 3)
+   - Offer to install Ollama (optional)
+   - Start Ollama service if needed
+   - Download llama3 model if requested
    - Set up direnv environment
    - Create a virtual environment
    - Install dependencies
@@ -79,6 +83,36 @@ An extensible AI TTRPG Sidekick that generates NPCs, quests, magic items, buildi
    python test_npc_generator.py
    python test_quest_generator.py
    python test_magic_item_generator.py
+   ```
+
+### Setting Up Local Models (Optional)
+
+If you prefer to use local models instead of OpenAI:
+
+1. **Install Ollama:**
+   ```bash
+   # macOS (with Homebrew)
+   brew install ollama
+   
+   # Linux
+   curl -fsSL https://ollama.ai/install.sh | sh
+   ```
+
+2. **Start Ollama service:**
+   ```bash
+   ollama serve
+   ```
+
+3. **Download a model:**
+   ```bash
+   ollama pull llama3
+   ```
+
+4. **Configure your environment:**
+   ```bash
+   # In .envrc
+   export API_PROVIDER="ollama"
+   export OLLAMA_MODEL="llama3"
    ```
 
 ## Virtual Environment
@@ -376,6 +410,30 @@ If you're having trouble with the API:
 2. **For Ollama, ensure the service is running:**
    ```bash
    curl http://localhost:11434/v1/models
+   ```
+
+### Ollama Issues
+
+If you're having trouble with Ollama:
+
+1. **Check if Ollama is running:**
+   ```bash
+   ollama list
+   ```
+
+2. **Start Ollama service:**
+   ```bash
+   ollama serve
+   ```
+
+3. **Check available models:**
+   ```bash
+   ollama list
+   ```
+
+4. **Download a model if needed:**
+   ```bash
+   ollama pull llama3
    ```
 
 ## License
