@@ -25,6 +25,10 @@ export TTRPG_RULESETS_DIR="data/rulesets"
 # --- Development Settings ---
 export PYTHONPATH="${PWD}:${PYTHONPATH}"
 
+# --- PATH Configuration ---
+# Add current directory to PATH so setup can be run without ./
+export PATH=".:${PATH}"
+
 # --- Virtual Environment Setup ---
 # This will automatically create and activate a virtual environment
 layout python3
