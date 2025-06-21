@@ -20,10 +20,24 @@ An extensible AI TTRPG Sidekick that generates NPCs, quests, magic items, buildi
    cd ttrpg_sidekick
    ```
 
-2. **Run the setup script:**
+2. **Set up your environment for the first time:**
    ```bash
-   ./setup.sh
+   # Copy the example environment configuration
+   cp .envrc.example .envrc
+
+   # Allow direnv to load the environment (required the first time)
+   direnv allow
    ```
+   This will:
+   - Set up environment variables for the project
+   - Add the project directory to your PATH so you can run `setup` (without `./`) from the project root
+   - Automatically create and activate a Python virtual environment when you enter the directory
+
+3. **Run the setup script:**
+   ```bash
+   setup
+   ```
+   (You can now just type `setup` instead of `./setup` as long as you're in the project root and direnv is active.)
 
    This will:
    - Check prerequisites (direnv, Python 3)
