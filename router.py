@@ -49,9 +49,10 @@ CLASSIFY AS 'npc' if the prompt:
 
 CLASSIFY AS 'quest' if the prompt:
 - Contains quest titles or mission names (e.g., "The Lost Artifact", "Rescue the Princess", "Clear the Dungeon")
-- Mentions missions, tasks, or objectives (e.g., "find the missing", "rescue", "investigate", "retrieve")
+- Mentions missions, tasks, or objectives (e.g., "find the missing", "rescue", "investigate", "retrieve", "finding", "searching", "looking for")
 - Describes adventures or challenges (e.g., "dangerous journey", "mysterious disappearance", "ancient curse")
-- Uses words like: quest, mission, adventure, task, objective, journey, rescue, find, investigate, retrieve, clear, defeat, etc.
+- Uses words like: quest, mission, adventure, task, objective, journey, rescue, find, investigate, retrieve, clear, defeat, search, locate, discover, hunt, track, pursue, etc.
+- Contains phrases about searching, finding, or locating something (e.g., "finding the needle", "searching for treasure", "looking for clues")
 
 CLASSIFY AS 'unknown' only if the prompt is unclear or doesn't fit any category.
 
