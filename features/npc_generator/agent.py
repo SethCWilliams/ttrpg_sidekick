@@ -22,26 +22,20 @@ NPC_TEMPLATE_FULL = """
   • Location / Where usually found:
   • Brief Personality Tagline:
   • Voice inspiration:
-
 ⸻
-
 👀 2. Appearance & Vibe
   • Physical traits:
   • Clothing / Gear:
   • Smells like:
   • Posture / Mannerisms:
-
 ⸻
-
 🧠 3. Personality & Social Profile
   • Core traits:
   • Values:
   • Quirks:
   • Motivations:
   • Fears:
-
 ⸻
-
 🎲 4. Connections & Roleplay Hooks
   • Allies / Friends:
   • Rivals / Enemies:
@@ -49,17 +43,13 @@ NPC_TEMPLATE_FULL = """
   • Rumor about them:
   • What they want from the party:
   • What the party can get from them:
-
 ⸻
-
 🧩 5. Secrets & Depth
   • Secret they're hiding:
   • Regret / Past trauma:
   • Hidden strength or twist:
   • If cornered…
-
 ⸻
-
 🗡️ 6. Combat & Mechanical (Optional)
   •	Combat style:
   • Special abilities or gear:
@@ -75,15 +65,11 @@ NPC_TEMPLATE_BRIEF = """
   •Brief Personality Tagline:
   •One interesting thing you know about them:
   •Voice inspiration:
-
 ⸻
-
 👀 2. Appearance & Vibe
   •Physical traits:
   •Clothing / Gear:
-
 ⸻
-
 🧠 3. Personality & Social Profile
   •Core traits:
   •Motivations:
