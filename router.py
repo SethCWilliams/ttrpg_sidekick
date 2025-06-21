@@ -61,6 +61,13 @@ CLASSIFY AS 'magic_item' if the prompt:
 - Uses words like: magic item, artifact, weapon, armor, ring, amulet, staff, wand, sword, dagger, bow, shield, etc.
 - Contains phrases about magical abilities or enchantments (e.g., "item that grants flight", "weapon that deals extra damage", "armor that protects from fire")
 
+CLASSIFY AS 'battlefield' if the prompt:
+- Contains battlefield names or locations (e.g., "Battle of Helm's Deep", "The Bloody Plains", "Frostwind Pass")
+- Mentions combat environments or war zones (e.g., "battlefield", "war zone", "combat arena", "fighting ground")
+- Describes tactical situations or military engagements (e.g., "ambush site", "defensive position", "siege location", "skirmish area")
+- Uses words like: battlefield, arena, battleground, war zone, combat zone, siege, ambush, skirmish, battle, fight, war, tactical, strategic, etc.
+- Contains phrases about combat environments (e.g., "place where armies clash", "location for a battle", "tactical position", "defensive terrain")
+
 CLASSIFY AS 'unknown' only if the prompt is unclear or doesn't fit any category.
 
 Your response MUST be a single, valid JSON object: {"intent": "your_classification"}
@@ -82,7 +89,7 @@ Do not add any other text, explanation, or markdown.
         intent = parsed_json.get("intent", "unknown").lower().strip()
 
         # Basic validation to ensure it's one of the expected intents
-        if intent not in ['npc', 'building', 'quest', 'magic_item']:
+        if intent not in ['npc', 'building', 'quest', 'magic_item', 'battlefield']:
             intent = 'unknown'
 
         return {

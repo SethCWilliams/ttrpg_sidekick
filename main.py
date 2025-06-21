@@ -11,6 +11,7 @@ from features.npc_generator.agent import NPCSpec, generate_npc
 from features.building_generator.agent import BuildingSpec, generate_building
 from features.quest_generator.agent import QuestSpec, generate_quest
 from features.magic_items.agent import MagicItemSpec, generate_magic_item
+from features.battlefields.agent import BattlefieldSpec, generate_battlefield
 
 def check_environment():
     """Checks for the necessary environment variables."""
@@ -58,8 +59,11 @@ def main():
     elif intent == "magic_item":
         spec = MagicItemSpec(world_name=args.world, prompt=args.prompt, brief=args.brief)
         result = generate_magic_item(spec)
+    elif intent == "battlefield":
+        spec = BattlefieldSpec(world_name=args.world, prompt=args.prompt, brief=args.brief)
+        result = generate_battlefield(spec)
     else:
-        result = f"Sorry, I'm not sure how to handle that request. I can currently generate 'npc', 'building', 'quest', or 'magic_item'."
+        result = f"Sorry, I'm not sure how to handle that request. I can currently generate 'npc', 'building', 'quest', 'magic_item', or 'battlefield'."
 
     # 3. Print the result
     print("-" * 50)
