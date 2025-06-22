@@ -1,70 +1,27 @@
 #!/usr/bin/env python3
 """
-Test script for the Quest Generator Agent.
+Test script for the Quest Generator
 """
 
-import os
-import sys
 from features.quest_generator.agent import QuestSpec, generate_quest
+from test_utils import run_generation_test
 
-def test_quest_generation():
-    """Test the quest generator with various prompts."""
+def main():
+    """Runs the quest generator test."""
+    generator_name = "Quest"
     
-    # Test cases
-    test_cases = [
+    examples = [
         {
-            "name": "Rescue Mission",
-            "prompt": "A princess has been kidnapped by a dragon and taken to a mountain lair",
-            "world": "Forgotten Realms"
+            "title": "Simple Quest",
+            "prompt": "The players must find the missing crown of the ancient king, which was stolen from the royal vault."
         },
         {
-            "name": "Investigation Quest", 
-            "prompt": "A series of mysterious disappearances in a small village",
-            "world": "Eberron"
-        },
-        {
-            "name": "Fetch Quest",
-            "prompt": "Retrieve a rare magical artifact from an ancient temple",
-            "world": "Greyhawk"
-        },
-        {
-            "name": "Brief Quest",
-            "prompt": "Clear goblins from a local mine",
-            "world": "Forgotten Realms",
-            "brief": True
+            "title": "Complex Quest",
+            "prompt": "A plague is sweeping through the city, and the players must find a rare flower from the top of a dangerous mountain to create a cure. The mountain is guarded by a territorial griffin, and a rival faction of alchemists is also trying to get the flower first."
         }
     ]
     
-    print("🧪 Testing Quest Generator")
-    print("=" * 50)
-    
-    for i, test_case in enumerate(test_cases, 1):
-        print(f"\n📋 Test {i}: {test_case['name']}")
-        print("-" * 30)
-        
-        # Create the spec
-        spec = QuestSpec(
-            world_name=test_case["world"],
-            prompt=test_case["prompt"],
-            brief=test_case.get("brief", False)
-        )
-        
-        try:
-            # Generate the quest
-            result = generate_quest(spec)
-            
-            # Print the result
-            print(f"World: {test_case['world']}")
-            print(f"Prompt: {test_case['prompt']}")
-            if test_case.get("brief"):
-                print("Mode: Brief")
-            print("\nGenerated Quest:")
-            print(result)
-            
-        except Exception as e:
-            print(f"❌ Error generating quest: {e}")
-        
-        print("\n" + "=" * 50)
+    run_generation_test(generator_name, generate_quest, QuestSpec, examples)
 
 if __name__ == "__main__":
-    test_quest_generation() 
+    main() 
