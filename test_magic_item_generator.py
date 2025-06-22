@@ -3,64 +3,29 @@
 Test script for the Magic Item Generator
 """
 
-import os
-import sys
 from features.magic_items.agent import MagicItemSpec, generate_magic_item
+from test_utils import run_generation_test
 
-def test_magic_item_generator():
-    """Test the magic item generator with various prompts."""
+def main():
+    """Runs the magic item generator test."""
+    generator_name = "Magic Item"
     
-    test_cases = [
+    examples = [
         {
-            "name": "Legendary Sword",
-            "prompt": "A legendary sword that was forged by an ancient dragon and can control fire",
-            "world": "Forgotten Realms"
+            "title": "Legendary Sword",
+            "prompt": "A legendary sword that was forged by an ancient dragon and can control fire"
         },
         {
-            "name": "Cursed Ring",
-            "prompt": "A cursed ring that grants invisibility but slowly drives the wearer mad",
-            "world": "Ravenloft"
+            "title": "Cursed Ring",
+            "prompt": "A cursed ring that grants invisibility but slowly drives the wearer mad"
         },
         {
-            "name": "Staff of Healing",
-            "prompt": "A wooden staff carved with healing runes that can cure diseases",
-            "world": "Eberron"
-        },
-        {
-            "name": "Brief Magic Item",
-            "prompt": "A simple magic dagger that glows in the dark",
-            "world": "Forgotten Realms",
-            "brief": True
+            "title": "Staff of Healing",
+            "prompt": "A wooden staff carved with healing runes that can cure diseases"
         }
     ]
     
-    print("🧪 Testing Magic Item Generator")
-    print("=" * 50)
-    
-    for i, test_case in enumerate(test_cases, 1):
-        print(f"\n📋 Test {i}: {test_case['name']}")
-        print("-" * 30)
-        
-        spec = MagicItemSpec(
-            world_name=test_case['world'],
-            prompt=test_case['prompt'],
-            brief=test_case.get('brief', False)
-        )
-        
-        try:
-            result = generate_magic_item(spec)
-            print(result)
-        except Exception as e:
-            print(f"❌ Error: {e}")
-        
-        print("\n" + "=" * 50)
+    run_generation_test(generator_name, generate_magic_item, MagicItemSpec, examples)
 
 if __name__ == "__main__":
-    # Check if we have the necessary environment setup
-    if not os.getenv("OPENAI_API_KEY") and not os.getenv("API_PROVIDER") == "ollama":
-        print("❌ Please set up your API credentials in .envrc first.")
-        print("   Run: cp .envrc.example .envrc")
-        print("   Then edit .envrc with your API key or set API_PROVIDER=ollama")
-        sys.exit(1)
-    
-    test_magic_item_generator() 
+    main() 

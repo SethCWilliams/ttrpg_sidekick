@@ -23,7 +23,7 @@ export TTRPG_WORLDS_DIR="data/worlds"
 export TTRPG_RULESETS_DIR="data/rulesets"
 
 # --- Development Settings ---
-export PYTHONPATH="${PWD}:${PYTHONPATH}"
+export PYTHONPATH="${PWD}:${PWD}/testing:${PYTHONPATH}"
 
 # --- PATH Configuration ---
 # Add current directory to PATH so setup can be run without ./
