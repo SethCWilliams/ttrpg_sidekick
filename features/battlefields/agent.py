@@ -7,99 +7,19 @@ Generates detailed battlefield descriptions with terrain, hazards, and tactical 
 import os
 from pydantic import BaseModel, Field
 from openai import OpenAI
+from pathlib import Path
 from core.llm_service import llm_service
 from core.text_utils import clean_sheet
 
-BATTLEFIELD_TEMPLATE_FULL = """
-⚔️ Battlefield Profile: A Comprehensive Combat Environment Guide
+# Path to the directory containing prompts
+PROMPT_DIR = Path(__file__).parent / "prompts"
 
-📌 1. At a Glance (Quick DM Info)
-  • Battlefield Name:
-  • Location: (Region, City, Specific Area)
-  • Size: (Small, Medium, Large, Massive)
-  • Terrain Type: (Forest, Mountain, Urban, Desert, etc.)
-  • Weather Conditions: (Current weather and its impact)
-  • Time of Day: (Dawn, Day, Dusk, Night)
-⸻
-🗺️ 2. Physical Layout & Terrain
-  • Overall Shape: (Circular, rectangular, irregular, etc.)
-  • Key Features: (Hills, rivers, buildings, ruins, etc.)
-  • Elevation Changes: (High ground, low areas, cliffs)
-  • Cover Options: (Rocks, trees, walls, debris)
-  • Movement Restrictions: (Difficult terrain, obstacles, barriers)
-⸻
-🌿 3. Environmental Hazards
-  • Natural Hazards: (Lava, quicksand, unstable ground, etc.)
-  • Weather Hazards: (Lightning, strong winds, fog, etc.)
-  • Magical Hazards: (Wild magic zones, cursed areas, etc.)
-  • Traps & Ambushes: (Hidden dangers, trigger conditions)
-  • Environmental Damage: (What can hurt players?)
-⸻
-⚔️ 4. Tactical Considerations
-  • High Ground: (Where is it and what advantage does it provide?)
-  • Chokepoints: (Narrow passages, bridges, doorways)
-  • Flanking Routes: (Ways to get around enemies)
-  • Escape Routes: (How to retreat or flee)
-  • Line of Sight: (What blocks vision and how?)
-⸻
-🎯 5. Combat Zones & Objectives
-  • Primary Objective: (What are they fighting for?)
-  • Secondary Objectives: (Bonus goals or side missions)
-  • Control Points: (Strategic locations to hold)
-  • Resource Locations: (Weapons, healing, supplies)
-  • Victory Conditions: (How to win the battle)
-⸻
-👥 6. Forces & Deployment
-  • Friendly Forces: (Allies, their positions, capabilities)
-  • Enemy Forces: (Opponents, their positions, tactics)
-  • Neutral Parties: (Civilians, wildlife, other threats)
-  • Reinforcements: (Who might arrive and when?)
-  • Special Units: (Elite troops, spellcasters, monsters)
-⸻
-🌙 7. Dynamic Elements
-  • Changing Conditions: (How the battlefield evolves)
-  • Time Pressure: (Urgency, deadlines, consequences)
-  • Moral Choices: (Ethical decisions during combat)
-  • Environmental Storytelling: (What the battlefield reveals)
-  • Aftermath: (What happens after the battle?)
-⸻
-📊 8. Game Mechanics
-  • Initiative Modifiers: (Advantage/disadvantage sources)
-  • Movement Costs: (How terrain affects movement)
-  • Cover Bonuses: (AC and saving throw modifiers)
-  • Special Actions: (Unique tactical options)
-  • Difficulty Rating: (How challenging is this battlefield?)
-"""
+# Load prompt templates from files
+with open(PROMPT_DIR / "full.prompt", "r") as f:
+    BATTLEFIELD_TEMPLATE_FULL = f.read()
 
-BATTLEFIELD_TEMPLATE_BRIEF = """
-⚔️ Battlefield Profile (Brief)
-
-📌 1. At a Glance
-  • Battlefield Name:
-  • Location:
-  • Size:
-  • Terrain Type:
-  • Weather Conditions:
-⸻
-🗺️ 2. Physical Layout & Terrain
-  • Key Features:
-  • Cover Options:
-  • Movement Restrictions:
-⸻
-🌿 3. Environmental Hazards
-  • Natural Hazards:
-  • Magical Hazards:
-⸻
-⚔️ 4. Tactical Considerations
-  • High Ground:
-  • Chokepoints:
-  • Line of Sight:
-⸻
-🎯 5. Combat Zones & Objectives
-  • Primary Objective:
-  • Control Points:
-  • Victory Conditions:
-"""
+with open(PROMPT_DIR / "brief.prompt", "r") as f:
+    BATTLEFIELD_TEMPLATE_BRIEF = f.read()
 
 # Battlefield-specific filler phrases to remove
 BATTLEFIELD_FILLER_PHRASES = [
