@@ -7,83 +7,19 @@ Generates detailed magic items with properties, lore, and mechanics.
 import os
 from pydantic import BaseModel, Field
 from openai import OpenAI
+from pathlib import Path
 from core.llm_service import llm_service
 from core.text_utils import clean_sheet
 
-MAGIC_ITEM_TEMPLATE_FULL = """
-⚔️ Magic Item Profile: A Comprehensive Artifact Guide
+# Path to the directory containing prompts
+PROMPT_DIR = Path(__file__).parent / "prompts"
 
-📌 1. At a Glance (Quick DM Info)
-  • Item Name:
-  • Item Type: (Weapon, Armor, Wondrous Item, Ring, etc.)
-  • Rarity: (Common, Uncommon, Rare, Very Rare, Legendary)
-  • Attunement: (Yes/No - if yes, by whom)
-  • Estimated Value: (Gold pieces or "Priceless")
-⸻
-✨ 2. Physical Description
-  • Appearance: (What does it look like?)
-  • Materials: (What is it made of?)
-  • Size & Weight: (How big/heavy is it?)
-  • Visual Effects: (Does it glow, shimmer, etc.?)
-⸻
-🔮 3. Magical Properties
-  • Primary Ability: (Main magical effect)
-  • Secondary Abilities: (Additional powers)
-  • Activation: (How is it used? Command word, attunement, etc.)
-  • Duration: (How long do effects last?)
-  • Charges/Limitations: (Any restrictions or costs?)
-⸻
-⚔️ 4. Combat & Mechanics
-  • Combat Bonuses: (Attack, damage, AC, etc.)
-  • Special Actions: (Unique combat abilities)
-  • Saving Throws: (Any saves it grants or requires)
-  • Damage Types: (What kind of damage does it deal/resist?)
-⸻
-📖 5. Lore & History
-  • Creator: (Who made it? When? Why?)
-  • Previous Owners: (Famous wielders or owners)
-  • Legendary Deeds: (What has it accomplished?)
-  • Current Location: (Where might it be found?)
-⸻
-🎭 6. Roleplay & Story Hooks
-  • Personality: (Does it have a mind of its own?)
-  • Quirks: (Any strange behaviors or requirements?)
-  • Curses: (Any negative side effects?)
-  • Quest Potential: (What stories could it inspire?)
-⸻
-⚖️ 7. Balance & Game Impact
-  • Power Level: (How strong is it for its tier?)
-  • Party Impact: (How will it affect gameplay?)
-  • Recommended Level: (When should players get this?)
-  • Variants: (Alternative versions or modifications)
-"""
+# Load prompt templates from files
+with open(PROMPT_DIR / "full.prompt", "r") as f:
+    MAGIC_ITEM_TEMPLATE_FULL = f.read()
 
-MAGIC_ITEM_TEMPLATE_BRIEF = """
-⚔️ Magic Item Profile (Brief)
-
-📌 1. At a Glance
-  • Item Name:
-  • Item Type:
-  • Rarity:
-  • Attunement:
-⸻
-✨ 2. Physical Description
-  • Appearance:
-  • Visual Effects:
-⸻
-🔮 3. Magical Properties
-  • Primary Ability:
-  • Activation:
-  • Charges/Limitations:
-⸻
-📖 4. Lore & History
-  • Creator:
-  • Legendary Deeds:
-⸻
-🎭 5. Roleplay & Story Hooks
-  • Personality:
-  • Quest Potential:
-"""
+with open(PROMPT_DIR / "brief.prompt", "r") as f:
+    MAGIC_ITEM_TEMPLATE_BRIEF = f.read()
 
 # Magic item-specific filler phrases to remove
 MAGIC_ITEM_FILLER_PHRASES = [
