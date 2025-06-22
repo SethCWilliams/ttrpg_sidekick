@@ -7,75 +7,19 @@ Generates detailed NPCs with names, races, classes, motives, secrets, and dialog
 import os
 from pydantic import BaseModel, Field
 from openai import OpenAI
+from pathlib import Path
 from core.llm_service import llm_service
 from core.text_utils import clean_sheet
 
-NPC_TEMPLATE_FULL = """
-🧾 NPC Template: (Full)
+# Path to the directory containing prompts
+PROMPT_DIR = Path(__file__).parent / "prompts"
 
-📌 1. Quick Overview (at-a-glance info for DMs)
-  • Name:
-  • Race / Species:
-  • Age / Apparent Age:
-  • Gender / Pronouns:
-  • Occupation / Role:
-  • Location / Where usually found:
-  • Brief Personality Tagline:
-  • Voice inspiration:
-⸻
-👀 2. Appearance & Vibe
-  • Physical traits:
-  • Clothing / Gear:
-  • Smells like:
-  • Posture / Mannerisms:
-⸻
-🧠 3. Personality & Social Profile
-  • Core traits:
-  • Values:
-  • Quirks:
-  • Motivations:
-  • Fears:
-⸻
-🎲 4. Connections & Roleplay Hooks
-  • Allies / Friends:
-  • Rivals / Enemies:
-  • How they view the party:
-  • Rumor about them:
-  • What they want from the party:
-  • What the party can get from them:
-⸻
-🧩 5. Secrets & Depth
-  • Secret they're hiding:
-  • Regret / Past trauma:
-  • Hidden strength or twist:
-  • If cornered…
-⸻
-🗡️ 6. Combat & Mechanical (Optional)
-  •	Combat style:
-  • Special abilities or gear:
-"""
+# Load prompt templates from files
+with open(PROMPT_DIR / "full.prompt", "r") as f:
+    NPC_TEMPLATE_FULL = f.read()
 
-NPC_TEMPLATE_BRIEF = """
-🧾 NPC Template (Brief)
-
-📌 1. Quick Overview
-  •Name:
-  •Race / Species:
-  •Occupation / Role:
-  •Brief Personality Tagline:
-  •One interesting thing you know about them:
-  •Voice inspiration:
-⸻
-👀 2. Appearance & Vibe
-  •Physical traits:
-  •Clothing / Gear:
-⸻
-🧠 3. Personality & Social Profile
-  •Core traits:
-  •Motivations:
-  •Fears:
-  •Quirks:
-"""
+with open(PROMPT_DIR / "brief.prompt", "r") as f:
+    NPC_TEMPLATE_BRIEF = f.read()
 
 # NPC-specific filler phrases to remove
 NPC_FILLER_PHRASES = [
