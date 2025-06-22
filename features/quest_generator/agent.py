@@ -7,86 +7,19 @@ Generates detailed TTRPG quests with objectives, rewards, NPCs, and plot hooks.
 import os
 from pydantic import BaseModel, Field
 from openai import OpenAI
+from pathlib import Path
 from core.llm_service import llm_service
 from core.text_utils import clean_sheet
 
-# A detailed template for generating quests
-QUEST_TEMPLATE_FULL = """
-🎯 Quest Profile: A Comprehensive Adventure Guide
+# Path to the directory containing prompts
+PROMPT_DIR = Path(__file__).parent / "prompts"
 
-📌 1. Quest Overview (Quick DM Info)
-  • Quest Title:
-  • Quest Type: (e.g., Fetch Quest, Escort, Investigation, Combat, Social)
-  • Difficulty Level: (Easy, Medium, Hard, Deadly)
-  • Recommended Party Level:
-  • Estimated Duration: (1 session, 2-3 sessions, Long-term arc)
-  • Quest Giver: (Who is offering this quest?)
-⸻
-🎭 2. The Hook & Setup
-  • The Problem: (What's wrong that needs fixing?)
-  • The Request: (What does the quest giver want the party to do?)
-  • Urgency: (Why does this need to be done now?)
-  • Initial Clues: (What does the party know going in?)
-⸻
-🗺️ 3. Quest Objectives & Structure
-  • Primary Objective: (The main goal)
-  • Secondary Objectives: (Optional side goals that add depth)
-  • Key Locations: (Where does this quest take place?)
-  • Major NPCs: (Who will the party encounter?)
-  • Obstacles & Challenges: (What stands in their way?)
-⸻
-💰 4. Rewards & Consequences
-  • Monetary Reward: (Gold, gems, etc.)
-  • Item Rewards: (Magic items, equipment, etc.)
-  • Social Rewards: (Reputation, allies, favors, etc.)
-  • Experience Points: (How much XP is this worth?)
-  • Consequences of Failure: (What happens if they don't succeed?)
-  • Consequences of Success: (How does this change the world?)
-⸻
-🎲 5. Roleplay & Story Elements
-  • Moral Dilemmas: (Are there tough choices to make?)
-  • Plot Twists: (Unexpected revelations or complications)
-  • Character Development Opportunities: (How can PCs grow from this?)
-  • World-Building Elements: (What does this reveal about the setting?)
-⸻
-⚔️ 6. Combat & Mechanics (If Applicable)
-  • Potential Encounters: (What creatures or NPCs might they fight?)
-  • Environmental Hazards: (Traps, weather, terrain challenges)
-  • Special Mechanics: (Unique rules or systems for this quest)
-  • Boss Fight: (If there's a climactic battle, describe it)
-⸻
-🧩 7. Secrets & Hidden Elements
-  • Hidden Objectives: (Things the party might discover)
-  • Secret NPCs: (Characters who might not be what they seem)
-  • Alternative Solutions: (Different ways to complete the quest)
-  • Long-term Implications: (How this quest affects future adventures)
-"""
+# Load prompt templates from files
+with open(PROMPT_DIR / "full.prompt", "r") as f:
+    QUEST_TEMPLATE_FULL = f.read()
 
-# A brief version of the quest template
-QUEST_TEMPLATE_BRIEF = """
-🎯 Quest Profile (Brief)
-
-📌 1. Quest Overview
-  • Quest Title:
-  • Quest Type:
-  • Difficulty Level:
-  • Quest Giver:
-⸻
-🎭 2. The Hook & Setup
-  • The Problem:
-  • The Request:
-  • Urgency:
-⸻
-🗺️ 3. Quest Objectives
-  • Primary Objective:
-  • Key Locations:
-  • Major NPCs:
-⸻
-💰 4. Rewards & Consequences
-  • Rewards:
-  • Consequences of Failure:
-  • Consequences of Success:
-"""
+with open(PROMPT_DIR / "brief.prompt", "r") as f:
+    QUEST_TEMPLATE_BRIEF = f.read()
 
 # Quest-specific filler phrases to remove
 QUEST_FILLER_PHRASES = [
