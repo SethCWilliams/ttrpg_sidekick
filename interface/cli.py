@@ -22,16 +22,23 @@ def print_welcome():
     """Print the welcome message."""
     print("🎲 Welcome to TTRPG Sidekick Chat!")
     print("=" * 50)
-    print("I'm here to help with your TTRPG needs.")
-    print("I can generate specific content or answer general questions.")
+    print("I'm here to help with your TTRPG needs in two ways:")
     print()
-    print("I can create:")
-    print("• NPCs (characters, merchants, villains, etc.)")
-    print("• Buildings (taverns, shops, towers, etc.)")
-    print("• Quests (missions, adventures, objectives)")
-    print("• Magic Items (weapons, artifacts, enchanted objects)")
-    print("• Battlefields (combat environments, tactical situations)")
-    print("• Backstories (character histories, personal stories)")
+    print("💬 **Conversational Mode** (default)")
+    print("   Ask questions, brainstorm ideas, get advice")
+    print("   Example: 'What are some good NPC ideas for a fantasy tavern?'")
+    print()
+    print("⚡ **Generation Mode** (use qualifiers)")
+    print("   Create specific content with detailed templates")
+    print("   Example: '/npc a wise old wizard who lives in a tower'")
+    print()
+    print("Available generators:")
+    print("• /npc - Characters, merchants, villains, etc.")
+    print("• /building - Taverns, shops, towers, etc.")
+    print("• /quest - Missions, adventures, objectives")
+    print("• /magic_item - Weapons, artifacts, enchanted objects")
+    print("• /battlefield - Combat environments, tactical situations")
+    print("• /backstory - Character histories, personal stories")
     print()
     print("Commands:")
     print("• /help - Show this help message")
@@ -39,9 +46,6 @@ def print_welcome():
     print("• /world <name> - Set the campaign world (optional)")
     print("• /brief - Toggle brief mode for next generation")
     print("• /quit or /exit - Exit the chat")
-    print()
-    print("You can also use qualifiers like /npc, /quest, etc. to force specific generators.")
-    print("Example: '/npc a wise old wizard who lives in a tower'")
     print()
     print("Start chatting! (Type /help for commands)")
     print("-" * 50)
@@ -103,6 +107,11 @@ class SmartChatSession:
         intent = routed_request.get("intent")
         prompt = routed_request.get("prompt", user_input)
         
+        # Handle unknown qualifiers
+        if intent == "unknown_qualifier":
+            unknown_qualifier = routed_request.get("unknown_qualifier", "unknown")
+            return f"❌ Unknown qualifier '/{unknown_qualifier}'. Available qualifiers: /npc, /building, /quest, /magic_item, /battlefield, /backstory"
+        
         # If we detected a specific generator intent, use it
         if intent in ['npc', 'building', 'quest', 'magic_item', 'battlefield', 'backstory']:
             print(f"🔎 Intent Detected: {intent.upper()}")
@@ -120,7 +129,23 @@ class SmartChatSession:
         try:
             # Create messages for the API call
             messages = [
-                {"role": "system", "content": "You are a helpful TTRPG assistant. You help with creating NPCs, quests, magic items, buildings, battlefields, and character backstories. Be creative and engaging in your responses. If someone asks for specific content generation, suggest they try being more specific about what they want to create."}
+                {"role": "system", "content": """You are a creative and helpful TTRPG assistant. Your job is to be engaging, imaginative, and guide users effectively.
+
+IMPORTANT: You can help with TTRPG content in two ways:
+1. **Conversational help** - Answering questions, brainstorming ideas, giving advice
+2. **Content generation** - Creating specific NPCs, quests, items, etc. (users must use qualifiers like /npc, /quest, etc.)
+
+When someone asks for specific content generation (like "create an NPC" or "make a quest"), guide them to use the appropriate qualifier:
+- For NPCs: "/npc [description]" (e.g., "/npc a wise old wizard who lives in a tower")
+- For buildings: "/building [description]" (e.g., "/building a mysterious tavern in the docks")
+- For quests: "/quest [description]" (e.g., "/quest rescue the kidnapped merchant")
+- For magic items: "/magic_item [description]" (e.g., "/magic_item a sword that glows in the dark")
+- For battlefields: "/battlefield [description]" (e.g., "/battlefield a narrow mountain pass")
+- For backstories: "/backstory [description]" (e.g., "/backstory an orphan who discovered magical powers")
+
+When brainstorming or giving ideas, be creative and specific. Provide multiple options and explain why they might work well.
+
+Be enthusiastic, helpful, and make TTRPG creation fun!"""}
             ]
             
             # Add conversation history (keep last 10 messages to avoid token limits)
@@ -131,7 +156,7 @@ class SmartChatSession:
             response = llm_service.client.chat.completions.create(
                 model=llm_service.model,
                 messages=messages,
-                temperature=0.7,
+                temperature=0.8,
                 max_tokens=1000,
             )
             
