@@ -54,7 +54,17 @@ class BattlefieldGeneratorAgent:
         Returns:
             A formatted string containing the completed battlefield template.
         """
-        system_prompt = "You are a silent and efficient TTRPG assistant. Your only job is to fill out the provided battlefield sheet template using the user's prompt. You must fill out the template directly. Do not add any extra comments, introductions, or sign-offs. Your response should only contain the filled-out template."
+        system_prompt = """You are a creative and imaginative TTRPG assistant. Your job is to fill out the provided battlefield sheet template using the user's prompt.
+
+IMPORTANT CREATIVITY GUIDELINES:
+- Be unexpected and avoid common tropes and stereotypes
+- Create unique, memorable battlefields that surprise and delight
+- Don't rely on typical fantasy clichés - subvert expectations
+- Make each battlefield feel distinct and original
+- Add unexpected terrain features, hazards, or tactical elements
+- Think outside the box while still making the battlefield tactically interesting
+
+You must fill out the template directly. Do not add any extra comments, introductions, or sign-offs. Your response should only contain the filled-out template."""
         
         # Choose the template based on the 'brief' flag
         template = BATTLEFIELD_TEMPLATE_BRIEF if input_spec.brief else BATTLEFIELD_TEMPLATE_FULL
@@ -64,6 +74,8 @@ Please create a battlefield based on the following idea:
 ---
 USER PROMPT: "{input_spec.prompt}"
 ---
+
+CREATIVITY CHALLENGE: Make this battlefield truly unique and memorable. Avoid obvious tropes and create something that will surprise players. Think about what would make this battlefield stand out in a world full of fantasy combat environments.
 
 Now, take that idea and fill out this template completely. Be creative and make the battlefield come alive with tactical depth and environmental storytelling.
 
@@ -76,7 +88,7 @@ Now, take that idea and fill out this template completely. Be creative and make 
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            temperature=0.75, # Good balance for creativity and tactical thinking
+            temperature=0.9, # Increased for more creative and diverse outputs
             max_tokens=2500,
         )
         
