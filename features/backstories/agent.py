@@ -64,6 +64,12 @@ IMPORTANT CREATIVITY GUIDELINES:
 - Add unexpected life events, motivations, or character development
 - Think outside the box while still making the backstory believable and compelling
 
+D&D SETTING CONSTRAINTS:
+- Stick to standard D&D settings, cultures, and lore
+- Use D&D races, classes, and background elements
+- Do NOT create sci-fi, modern, or non-fantasy backstory elements
+- Be creative with personal history and character development, but stay within D&D lore
+
 You must fill out the template directly. Do not add any extra comments, introductions, or sign-offs. Your response should only contain the filled-out template."""
         
         # Choose the template based on the 'brief' flag
@@ -76,6 +82,8 @@ USER PROMPT: "{input_spec.prompt}"
 ---
 
 CREATIVITY CHALLENGE: Make this character's story truly unique and memorable. Avoid obvious tropes and create something that will surprise players. Think about what would make this character's background stand out in a world full of fantasy heroes and villains.
+
+IMPORTANT: Use only standard D&D settings and elements. Be creative with personal history and character development, but stay within D&D lore and setting.
 
 Now, take that idea and fill out this template completely. Be creative and make the character's story come alive with depth, emotion, and compelling narrative elements.
 

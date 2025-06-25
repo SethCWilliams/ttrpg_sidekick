@@ -64,6 +64,12 @@ IMPORTANT CREATIVITY GUIDELINES:
 - Add unexpected properties, lore, or unique mechanics
 - Think outside the box while still making the item balanced and interesting
 
+D&D SETTING CONSTRAINTS:
+- Stick to standard D&D magic, spells, and lore
+- Use D&D magical traditions, schools of magic, and item types
+- Do NOT create sci-fi, modern, or non-fantasy magical elements
+- Be creative with properties and lore, but stay within D&D magical systems
+
 You must fill out the template directly. Do not add any extra comments, introductions, or sign-offs. Your response should only contain the filled-out template."""
         
         # Choose the template based on the 'brief' flag
@@ -76,6 +82,8 @@ USER PROMPT: "{input_spec.prompt}"
 ---
 
 CREATIVITY CHALLENGE: Make this magic item truly unique and memorable. Avoid obvious tropes and create something that will surprise players. Think about what would make this item stand out in a world full of fantasy artifacts.
+
+IMPORTANT: Use only standard D&D magic and lore. Be creative with properties and effects, but stay within D&D magical systems and traditions.
 
 Now, take that idea and fill out this template completely. Be creative and make the magic item come alive with interesting properties and lore.
 

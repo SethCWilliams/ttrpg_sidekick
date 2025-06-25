@@ -64,6 +64,12 @@ IMPORTANT CREATIVITY GUIDELINES:
 - Add unexpected quirks, motivations, or background elements
 - Think outside the box while still making the character believable
 
+D&D RACE CONSTRAINTS:
+- Stick to standard D&D races: Human, Elf, Dwarf, Halfling, Gnome, Half-Elf, Half-Orc, Tiefling, Dragonborn, Aarakocra, Genasi, Goliath, Tabaxi, Triton, Warforged, etc. with a heavier weight towards more common races
+- Do NOT create insect races, alien species, or non-D&D creatures
+- If the user specifies a race, use that race or a standard D&D equivalent
+- Be creative with personality, background, and role, but stay within D&D lore
+
 You must fill out the template directly. Do not add any extra comments, introductions, or sign-offs. Your response should only contain the filled-out template."""
         
         # Choose the template based on the 'brief' flag
@@ -76,6 +82,8 @@ USER PROMPT: "{input_spec.prompt}"
 ---
 
 CREATIVITY CHALLENGE: Make this character truly unique and memorable. Avoid obvious tropes and create something that will surprise players. Think about what would make this character stand out in a world full of fantasy characters.
+
+IMPORTANT: Use only standard D&D races and creatures. Be creative with personality, background, and role, but stay within D&D lore and setting.
 
 Now, take that idea and fill out this template completely. Be creative and make the character come alive.
 

@@ -50,6 +50,12 @@ IMPORTANT CREATIVITY GUIDELINES:
 - Add unexpected features, history, or atmosphere elements
 - Think outside the box while still making the location believable
 
+D&D SETTING CONSTRAINTS:
+- Stick to standard D&D settings, creatures, and lore
+- Use D&D races, monsters, and magical elements
+- Do NOT create sci-fi, modern, or non-fantasy elements
+- Be creative with design, atmosphere, and features, but stay within D&D lore
+
 You must fill out the template directly. Do not add any extra comments, introductions, or sign-offs. Your response should only contain the filled-out template."""
         
         # Choose the template based on the 'brief' flag
@@ -62,6 +68,8 @@ USER PROMPT: "{input_spec.prompt}"
 ---
 
 CREATIVITY CHALLENGE: Make this location truly unique and memorable. Avoid obvious tropes and create something that will surprise players. Think about what would make this building stand out in a world full of fantasy locations.
+
+IMPORTANT: Use only standard D&D settings and elements. Be creative with design and atmosphere, but stay within D&D lore and setting.
 
 Now, take that idea and fill out this template completely. Be creative and make the location come alive.
 

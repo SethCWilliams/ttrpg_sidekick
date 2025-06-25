@@ -64,6 +64,12 @@ IMPORTANT CREATIVITY GUIDELINES:
 - Add unexpected terrain features, hazards, or tactical elements
 - Think outside the box while still making the battlefield tactically interesting
 
+D&D SETTING CONSTRAINTS:
+- Stick to standard D&D settings, terrain types, and environmental hazards
+- Use D&D creatures, magical effects, and natural phenomena
+- Do NOT create sci-fi, modern, or non-fantasy battlefield elements
+- Be creative with terrain and tactical features, but stay within D&D lore
+
 You must fill out the template directly. Do not add any extra comments, introductions, or sign-offs. Your response should only contain the filled-out template."""
         
         # Choose the template based on the 'brief' flag
@@ -76,6 +82,8 @@ USER PROMPT: "{input_spec.prompt}"
 ---
 
 CREATIVITY CHALLENGE: Make this battlefield truly unique and memorable. Avoid obvious tropes and create something that will surprise players. Think about what would make this battlefield stand out in a world full of fantasy combat environments.
+
+IMPORTANT: Use only standard D&D settings and elements. Be creative with terrain and tactical features, but stay within D&D lore and setting.
 
 Now, take that idea and fill out this template completely. Be creative and make the battlefield come alive with tactical depth and environmental storytelling.
 
