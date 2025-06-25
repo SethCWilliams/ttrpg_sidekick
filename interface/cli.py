@@ -36,7 +36,7 @@ def print_welcome():
     print("Commands:")
     print("• /help - Show this help message")
     print("• /clear - Clear conversation history")
-    print("• /world <name> - Change the campaign world")
+    print("• /world <name> - Set the campaign world (optional)")
     print("• /brief - Toggle brief mode for next generation")
     print("• /quit or /exit - Exit the chat")
     print()
@@ -50,7 +50,7 @@ def print_welcome():
 class SmartChatSession:
     """Manages a smart chat session that can route to generators or provide conversational responses."""
     
-    def __init__(self, world_name: str = "Forgotten Realms"):
+    def __init__(self, world_name: str = None):
         self.world_name = world_name
         self.conversation_history = []
         self.router = Router()
@@ -67,23 +67,26 @@ class SmartChatSession:
     def generate_with_generator(self, intent: str, prompt: str) -> str:
         """Generate content using the appropriate generator."""
         try:
+            # Use a generic world name if none is specified
+            world_name = self.world_name if self.world_name else "Generic Fantasy"
+            
             if intent == "npc":
-                spec = NPCSpec(world_name=self.world_name, prompt=prompt, brief=self.brief_mode)
+                spec = NPCSpec(world_name=world_name, prompt=prompt, brief=self.brief_mode)
                 result = generate_npc(spec)
             elif intent == "building":
-                spec = BuildingSpec(world_name=self.world_name, prompt=prompt, brief=self.brief_mode)
+                spec = BuildingSpec(world_name=world_name, prompt=prompt, brief=self.brief_mode)
                 result = generate_building(spec)
             elif intent == "quest":
-                spec = QuestSpec(world_name=self.world_name, prompt=prompt, brief=self.brief_mode)
+                spec = QuestSpec(world_name=world_name, prompt=prompt, brief=self.brief_mode)
                 result = generate_quest(spec)
             elif intent == "magic_item":
-                spec = MagicItemSpec(world_name=self.world_name, prompt=prompt, brief=self.brief_mode)
+                spec = MagicItemSpec(world_name=world_name, prompt=prompt, brief=self.brief_mode)
                 result = generate_magic_item(spec)
             elif intent == "battlefield":
-                spec = BattlefieldSpec(world_name=self.world_name, prompt=prompt, brief=self.brief_mode)
+                spec = BattlefieldSpec(world_name=world_name, prompt=prompt, brief=self.brief_mode)
                 result = generate_battlefield(spec)
             elif intent == "backstory":
-                spec = BackstorySpec(world_name=self.world_name, prompt=prompt, brief=self.brief_mode)
+                spec = BackstorySpec(world_name=world_name, prompt=prompt, brief=self.brief_mode)
                 result = generate_backstory(spec)
             else:
                 result = f"Sorry, I'm not sure how to handle that request. I can currently generate 'npc', 'building', 'quest', 'magic_item', 'battlefield', or 'backstory'."
@@ -149,7 +152,7 @@ def main():
         print("✅ Using Ollama. Ensure the Ollama application is running.")
     
     # Initialize chat session
-    session = SmartChatSession(world_name="Forgotten Realms")
+    session = SmartChatSession()
     
     print_welcome()
     
@@ -157,7 +160,8 @@ def main():
         while True:
             # Get user input
             try:
-                user_input = input(f"🎲 [{session.world_name}] > ").strip()
+                world_display = session.world_name if session.world_name else "General"
+                user_input = input(f"🎲 [{world_display}] > ").strip()
             except (EOFError, KeyboardInterrupt):
                 print("\n👋 Goodbye!")
                 break
@@ -193,8 +197,16 @@ def main():
                     print(f"📜 Brief mode {status}")
                     continue
                 else:
-                    print(f"❌ Unknown command: {command}")
-                    continue
+                    # Check if this might be a qualifier (like /npc, /quest, etc.)
+                    qualifier = command[1:]  # Remove the leading slash
+                    valid_qualifiers = ['npc', 'building', 'quest', 'magic_item', 'battlefield', 'backstory']
+                    
+                    if qualifier in valid_qualifiers:
+                        # This is a valid qualifier, let the router handle it
+                        pass  # Continue to the normal processing below
+                    else:
+                        print(f"❌ Unknown command: {command}")
+                        continue
             
             # Add user message to history
             session.add_message("user", user_input)
