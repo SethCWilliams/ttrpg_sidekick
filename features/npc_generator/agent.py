@@ -64,6 +64,11 @@ IMPORTANT CREATIVITY GUIDELINES:
 - Add unexpected quirks, motivations, or background elements
 - Think outside the box while still making the character believable
 
+CONTEXT AWARENESS:
+- If the prompt includes context from previous conversation, incorporate those specific elements
+- If the user referenced numbered ideas or specific preferences, build upon those
+- Don't ignore conversation context - use it to create more relevant and personalized content
+
 D&D RACE CONSTRAINTS:
 - Stick to standard D&D races: Human, Elf, Dwarf, Halfling, Gnome, Half-Elf, Half-Orc, Tiefling, Dragonborn, Aarakocra, Genasi, Goliath, Tabaxi, Triton, Warforged, etc. with a heavier weight towards more common races
 - Do NOT create insect races, alien species, or non-D&D creatures
@@ -84,6 +89,8 @@ USER PROMPT: "{input_spec.prompt}"
 CREATIVITY CHALLENGE: Make this character truly unique and memorable. Avoid obvious tropes and create something that will surprise players. Think about what would make this character stand out in a world full of fantasy characters.
 
 IMPORTANT: Use only standard D&D races and creatures. Be creative with personality, background, and role, but stay within D&D lore and setting.
+
+CONTEXT AWARENESS: If the prompt includes context from a previous conversation (like numbered ideas or user preferences), make sure to incorporate those specific elements into your character creation. Don't ignore the context - build upon it!
 
 Now, take that idea and fill out this template completely. Be creative and make the character come alive.
 

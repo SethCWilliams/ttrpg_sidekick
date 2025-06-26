@@ -55,6 +55,11 @@ IMPORTANT CREATIVITY GUIDELINES:
 - Add unexpected twists, moral dilemmas, or unique challenges
 - Think outside the box while still making the quest believable and playable
 
+CONTEXT AWARENESS:
+- If the prompt includes context from previous conversation, incorporate those specific elements
+- If the user referenced numbered ideas or specific preferences, build upon those
+- Don't ignore conversation context - use it to create more relevant and personalized content
+
 D&D SETTING CONSTRAINTS:
 - Stick to standard D&D settings, creatures, and lore
 - Use D&D races, monsters, and magical elements
@@ -75,6 +80,8 @@ USER PROMPT: "{input_spec.prompt}"
 CREATIVITY CHALLENGE: Make this quest truly unique and memorable. Avoid obvious tropes and create something that will surprise players. Think about what would make this quest stand out in a world full of fantasy adventures.
 
 IMPORTANT: Use only standard D&D settings and elements. Be creative with plot and challenges, but stay within D&D lore and setting.
+
+CONTEXT AWARENESS: If the prompt includes context from a previous conversation (like numbered ideas or user preferences), make sure to incorporate those specific elements into your quest creation. Don't ignore the context - build upon it!
 
 Now, take that idea and fill out this template completely. Be creative and make the quest come alive with interesting challenges, meaningful choices, and compelling rewards.
 

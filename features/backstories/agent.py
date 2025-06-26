@@ -64,6 +64,11 @@ IMPORTANT CREATIVITY GUIDELINES:
 - Add unexpected life events, motivations, or character development
 - Think outside the box while still making the backstory believable and compelling
 
+CONTEXT AWARENESS:
+- If the prompt includes context from previous conversation, incorporate those specific elements
+- If the user referenced numbered ideas or specific preferences, build upon those
+- Don't ignore conversation context - use it to create more relevant and personalized content
+
 D&D SETTING CONSTRAINTS:
 - Stick to standard D&D settings, cultures, and lore
 - Use D&D races, classes, and background elements
@@ -84,6 +89,8 @@ USER PROMPT: "{input_spec.prompt}"
 CREATIVITY CHALLENGE: Make this character's story truly unique and memorable. Avoid obvious tropes and create something that will surprise players. Think about what would make this character's background stand out in a world full of fantasy heroes and villains.
 
 IMPORTANT: Use only standard D&D settings and elements. Be creative with personal history and character development, but stay within D&D lore and setting.
+
+CONTEXT AWARENESS: If the prompt includes context from a previous conversation (like numbered ideas or user preferences), make sure to incorporate those specific elements into your backstory creation. Don't ignore the context - build upon it!
 
 Now, take that idea and fill out this template completely. Be creative and make the character's story come alive with depth, emotion, and compelling narrative elements.
 

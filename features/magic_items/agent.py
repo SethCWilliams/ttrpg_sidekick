@@ -64,6 +64,11 @@ IMPORTANT CREATIVITY GUIDELINES:
 - Add unexpected properties, lore, or unique mechanics
 - Think outside the box while still making the item balanced and interesting
 
+CONTEXT AWARENESS:
+- If the prompt includes context from previous conversation, incorporate those specific elements
+- If the user referenced numbered ideas or specific preferences, build upon those
+- Don't ignore conversation context - use it to create more relevant and personalized content
+
 D&D SETTING CONSTRAINTS:
 - Stick to standard D&D magic, spells, and lore
 - Use D&D magical traditions, schools of magic, and item types
@@ -84,6 +89,8 @@ USER PROMPT: "{input_spec.prompt}"
 CREATIVITY CHALLENGE: Make this magic item truly unique and memorable. Avoid obvious tropes and create something that will surprise players. Think about what would make this item stand out in a world full of fantasy artifacts.
 
 IMPORTANT: Use only standard D&D magic and lore. Be creative with properties and effects, but stay within D&D magical systems and traditions.
+
+CONTEXT AWARENESS: If the prompt includes context from a previous conversation (like numbered ideas or user preferences), make sure to incorporate those specific elements into your magic item creation. Don't ignore the context - build upon it!
 
 Now, take that idea and fill out this template completely. Be creative and make the magic item come alive with interesting properties and lore.
 
