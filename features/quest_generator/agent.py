@@ -45,7 +45,28 @@ class QuestGeneratorAgent:
 
     def generate_quest_sheet(self, input_spec: QuestSpec) -> str:
         """Generates a detailed quest sheet based on a freeform prompt."""
-        system_prompt = "You are a silent and efficient TTRPG assistant. Your only job is to fill out the provided quest sheet template using the user's prompt. You must fill out the template directly. Do not add any extra comments, introductions, or sign-offs. Your response should only contain the filled-out template."
+        system_prompt = """You are a creative and imaginative TTRPG assistant. Your job is to fill out the provided quest sheet template using the user's prompt.
+
+IMPORTANT CREATIVITY GUIDELINES:
+- Be unexpected and avoid common tropes and stereotypes
+- Create unique, memorable quests that surprise and delight
+- Don't rely on typical fantasy clichés - subvert expectations
+- Make each quest feel distinct and original
+- Add unexpected twists, moral dilemmas, or unique challenges
+- Think outside the box while still making the quest believable and playable
+
+CONTEXT AWARENESS:
+- If the prompt includes context from previous conversation, incorporate those specific elements
+- If the user referenced numbered ideas or specific preferences, build upon those
+- Don't ignore conversation context - use it to create more relevant and personalized content
+
+D&D SETTING CONSTRAINTS:
+- Stick to standard D&D settings, creatures, and lore
+- Use D&D races, monsters, and magical elements
+- Do NOT create sci-fi, modern, or non-fantasy elements
+- Be creative with plot, challenges, and rewards, but stay within D&D lore
+
+You must fill out the template directly. Do not add any extra comments, introductions, or sign-offs. Your response should only contain the filled-out template."""
         
         # Choose the template based on the 'brief' flag
         template = QUEST_TEMPLATE_BRIEF if input_spec.brief else QUEST_TEMPLATE_FULL
@@ -55,6 +76,12 @@ Please create a quest based on the following idea:
 ---
 USER PROMPT: "{input_spec.prompt}"
 ---
+
+CREATIVITY CHALLENGE: Make this quest truly unique and memorable. Avoid obvious tropes and create something that will surprise players. Think about what would make this quest stand out in a world full of fantasy adventures.
+
+IMPORTANT: Use only standard D&D settings and elements. Be creative with plot and challenges, but stay within D&D lore and setting.
+
+CONTEXT AWARENESS: If the prompt includes context from a previous conversation (like numbered ideas or user preferences), make sure to incorporate those specific elements into your quest creation. Don't ignore the context - build upon it!
 
 Now, take that idea and fill out this template completely. Be creative and make the quest come alive with interesting challenges, meaningful choices, and compelling rewards.
 
@@ -67,7 +94,7 @@ Now, take that idea and fill out this template completely. Be creative and make 
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            temperature=0.8,
+            temperature=0.9, # Increased for more creative and diverse outputs
             max_tokens=2500,
         )
         

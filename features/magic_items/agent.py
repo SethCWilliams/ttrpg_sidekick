@@ -54,7 +54,28 @@ class MagicItemGeneratorAgent:
         Returns:
             A formatted string containing the completed magic item template.
         """
-        system_prompt = "You are a silent and efficient TTRPG assistant. Your only job is to fill out the provided magic item sheet template using the user's prompt. You must fill out the template directly. Do not add any extra comments, introductions, or sign-offs. Your response should only contain the filled-out template."
+        system_prompt = """You are a creative and imaginative TTRPG assistant. Your job is to fill out the provided magic item sheet template using the user's prompt.
+
+IMPORTANT CREATIVITY GUIDELINES:
+- Be unexpected and avoid common tropes and stereotypes
+- Create unique, memorable magic items that surprise and delight
+- Don't rely on typical fantasy clichés - subvert expectations
+- Make each item feel distinct and original
+- Add unexpected properties, lore, or unique mechanics
+- Think outside the box while still making the item balanced and interesting
+
+CONTEXT AWARENESS:
+- If the prompt includes context from previous conversation, incorporate those specific elements
+- If the user referenced numbered ideas or specific preferences, build upon those
+- Don't ignore conversation context - use it to create more relevant and personalized content
+
+D&D SETTING CONSTRAINTS:
+- Stick to standard D&D magic, spells, and lore
+- Use D&D magical traditions, schools of magic, and item types
+- Do NOT create sci-fi, modern, or non-fantasy magical elements
+- Be creative with properties and lore, but stay within D&D magical systems
+
+You must fill out the template directly. Do not add any extra comments, introductions, or sign-offs. Your response should only contain the filled-out template."""
         
         # Choose the template based on the 'brief' flag
         template = MAGIC_ITEM_TEMPLATE_BRIEF if input_spec.brief else MAGIC_ITEM_TEMPLATE_FULL
@@ -64,6 +85,12 @@ Please create a magic item based on the following idea:
 ---
 USER PROMPT: "{input_spec.prompt}"
 ---
+
+CREATIVITY CHALLENGE: Make this magic item truly unique and memorable. Avoid obvious tropes and create something that will surprise players. Think about what would make this item stand out in a world full of fantasy artifacts.
+
+IMPORTANT: Use only standard D&D magic and lore. Be creative with properties and effects, but stay within D&D magical systems and traditions.
+
+CONTEXT AWARENESS: If the prompt includes context from a previous conversation (like numbered ideas or user preferences), make sure to incorporate those specific elements into your magic item creation. Don't ignore the context - build upon it!
 
 Now, take that idea and fill out this template completely. Be creative and make the magic item come alive with interesting properties and lore.
 
@@ -76,7 +103,7 @@ Now, take that idea and fill out this template completely. Be creative and make 
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            temperature=0.75, # Good balance for creativity and consistency
+            temperature=0.9, # Increased for more creative and diverse outputs
             max_tokens=2500,
         )
         

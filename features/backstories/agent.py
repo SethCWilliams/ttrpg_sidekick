@@ -54,7 +54,28 @@ class BackstoryGeneratorAgent:
         Returns:
             A formatted string containing the completed backstory template.
         """
-        system_prompt = "You are a silent and efficient TTRPG assistant. Your only job is to fill out the provided character backstory sheet template using the user's prompt. You must fill out the template directly. Do not add any extra comments, introductions, or sign-offs. Your response should only contain the filled-out template."
+        system_prompt = """You are a creative and imaginative TTRPG assistant. Your job is to fill out the provided character backstory sheet template using the user's prompt.
+
+IMPORTANT CREATIVITY GUIDELINES:
+- Be unexpected and avoid common tropes and stereotypes
+- Create unique, memorable backstories that surprise and delight
+- Don't rely on typical fantasy clichés - subvert expectations
+- Make each character's story feel distinct and original
+- Add unexpected life events, motivations, or character development
+- Think outside the box while still making the backstory believable and compelling
+
+CONTEXT AWARENESS:
+- If the prompt includes context from previous conversation, incorporate those specific elements
+- If the user referenced numbered ideas or specific preferences, build upon those
+- Don't ignore conversation context - use it to create more relevant and personalized content
+
+D&D SETTING CONSTRAINTS:
+- Stick to standard D&D settings, cultures, and lore
+- Use D&D races, classes, and background elements
+- Do NOT create sci-fi, modern, or non-fantasy backstory elements
+- Be creative with personal history and character development, but stay within D&D lore
+
+You must fill out the template directly. Do not add any extra comments, introductions, or sign-offs. Your response should only contain the filled-out template."""
         
         # Choose the template based on the 'brief' flag
         template = BACKSTORY_TEMPLATE_BRIEF if input_spec.brief else BACKSTORY_TEMPLATE_FULL
@@ -64,6 +85,12 @@ Please create a character backstory based on the following idea:
 ---
 USER PROMPT: "{input_spec.prompt}"
 ---
+
+CREATIVITY CHALLENGE: Make this character's story truly unique and memorable. Avoid obvious tropes and create something that will surprise players. Think about what would make this character's background stand out in a world full of fantasy heroes and villains.
+
+IMPORTANT: Use only standard D&D settings and elements. Be creative with personal history and character development, but stay within D&D lore and setting.
+
+CONTEXT AWARENESS: If the prompt includes context from a previous conversation (like numbered ideas or user preferences), make sure to incorporate those specific elements into your backstory creation. Don't ignore the context - build upon it!
 
 Now, take that idea and fill out this template completely. Be creative and make the character's story come alive with depth, emotion, and compelling narrative elements.
 
@@ -76,7 +103,7 @@ Now, take that idea and fill out this template completely. Be creative and make 
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            temperature=0.8, # Higher temperature for more creative storytelling
+            temperature=0.9, # Increased for more creative and diverse outputs
             max_tokens=2500,
         )
         

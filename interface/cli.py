@@ -74,23 +74,26 @@ class SmartChatSession:
             # Use a generic world name if none is specified
             world_name = self.world_name if self.world_name else "Generic Fantasy"
             
+            # Build enhanced prompt with conversation context
+            enhanced_prompt = self._build_enhanced_prompt(prompt)
+            
             if intent == "npc":
-                spec = NPCSpec(world_name=world_name, prompt=prompt, brief=self.brief_mode)
+                spec = NPCSpec(world_name=world_name, prompt=enhanced_prompt, brief=self.brief_mode)
                 result = generate_npc(spec)
             elif intent == "building":
-                spec = BuildingSpec(world_name=world_name, prompt=prompt, brief=self.brief_mode)
+                spec = BuildingSpec(world_name=world_name, prompt=enhanced_prompt, brief=self.brief_mode)
                 result = generate_building(spec)
             elif intent == "quest":
-                spec = QuestSpec(world_name=world_name, prompt=prompt, brief=self.brief_mode)
+                spec = QuestSpec(world_name=world_name, prompt=enhanced_prompt, brief=self.brief_mode)
                 result = generate_quest(spec)
             elif intent == "magic_item":
-                spec = MagicItemSpec(world_name=world_name, prompt=prompt, brief=self.brief_mode)
+                spec = MagicItemSpec(world_name=world_name, prompt=enhanced_prompt, brief=self.brief_mode)
                 result = generate_magic_item(spec)
             elif intent == "battlefield":
-                spec = BattlefieldSpec(world_name=world_name, prompt=prompt, brief=self.brief_mode)
+                spec = BattlefieldSpec(world_name=world_name, prompt=enhanced_prompt, brief=self.brief_mode)
                 result = generate_battlefield(spec)
             elif intent == "backstory":
-                spec = BackstorySpec(world_name=world_name, prompt=prompt, brief=self.brief_mode)
+                spec = BackstorySpec(world_name=world_name, prompt=enhanced_prompt, brief=self.brief_mode)
                 result = generate_backstory(spec)
             else:
                 result = f"Sorry, I'm not sure how to handle that request. I can currently generate 'npc', 'building', 'quest', 'magic_item', 'battlefield', or 'backstory'."
@@ -98,6 +101,74 @@ class SmartChatSession:
             return result
         except Exception as e:
             return f"❌ Error generating content: {str(e)}"
+    
+    def _build_enhanced_prompt(self, current_prompt: str) -> str:
+        """Build an enhanced prompt that includes relevant conversation context."""
+        # Get recent conversation history (last 8 messages to capture more context)
+        recent_history = self.conversation_history[-8:] if len(self.conversation_history) > 8 else self.conversation_history
+        
+        if not recent_history:
+            return current_prompt
+        
+        # Look for relevant context in recent messages
+        context_parts = []
+        
+        for message in recent_history:
+            content = message.get("content", "")
+            role = message.get("role", "")
+            
+            # Look for numbered lists in assistant responses (ideas, options, etc.)
+            if role == "assistant" and any(f"{i}." in content for i in range(1, 10)):
+                # Extract the numbered list content
+                lines = content.split('\n')
+                numbered_content = []
+                for line in lines:
+                    if any(line.strip().startswith(f"{i}.") for i in range(1, 10)):
+                        numbered_content.append(line.strip())
+                
+                if numbered_content:
+                    context_parts.append(f"Previous options discussed:\n" + "\n".join(numbered_content[:5]))  # Limit to first 5 items
+            
+            # Look for any assistant responses that contain ideas, concepts, or descriptions
+            elif role == "assistant" and len(content) > 50:
+                # Look for content that seems like ideas or concepts (not just responses)
+                if any(keyword in content.lower() for keyword in ["idea", "concept", "tavern", "quest", "npc", "building", "magic", "battle", "sword", "temple", "artifact", "heist", "wizard", "dragon", "castle"]):
+                    # Extract the most relevant part (first 300 chars to avoid token bloat)
+                    context_parts.append(f"Previous discussion: {content[:300]}...")
+            
+            # Look for user preferences or selections
+            if role == "user":
+                content_lower = content.lower()
+                
+                # Check for specific number references
+                import re
+                number_match = re.search(r'number\s+(\d+)', content_lower)
+                if number_match:
+                    selected_number = number_match.group(1)
+                    context_parts.append(f"User selected option #{selected_number}: {content}")
+                
+                # Check for general references to previous content
+                elif any(word in content_lower for word in ["like", "prefer", "choose", "option", "want", "that", "discussed", "earlier", "before", "mentioned"]):
+                    context_parts.append(f"User preference: {content}")
+                
+                # Check for specific content references
+                elif any(word in content_lower for word in ["heist", "tavern", "sword", "quest", "npc", "building", "battle", "artifact", "temple", "wizard", "dragon"]):
+                    context_parts.append(f"User referencing specific content: {content}")
+        
+        if context_parts:
+            context_text = "\n\n".join(context_parts)
+            enhanced_prompt = f"""
+CONTEXT FROM PREVIOUS CONVERSATION:
+{context_text}
+
+CURRENT REQUEST:
+{current_prompt}
+
+IMPORTANT: Please incorporate the context from our previous conversation when creating this content. If the user referenced specific ideas, concepts, or preferences from earlier in our discussion, make sure to build upon those rather than creating something completely new. Use the context to inform your creation and maintain continuity with what was discussed.
+"""
+            return enhanced_prompt
+        
+        return current_prompt
     
     def handle_input(self, user_input: str) -> str:
         """Handle user input by either routing to a generator or providing conversational response."""

@@ -54,7 +54,28 @@ class NPCGeneratorAgent:
         Returns:
             A formatted string containing the completed NPC template.
         """
-        system_prompt = "You are a silent and efficient TTRPG assistant. Your only job is to fill out the provided character sheet template using the user's prompt. You must fill out the template directly. Do not add any extra comments, introductions, or sign-offs. Your response should only contain the filled-out template."
+        system_prompt = """You are a creative and imaginative TTRPG assistant. Your job is to fill out the provided character sheet template using the user's prompt.
+
+IMPORTANT CREATIVITY GUIDELINES:
+- Be unexpected and avoid common tropes and stereotypes
+- Create unique, memorable characters that surprise and delight
+- Don't rely on typical fantasy clichés - subvert expectations
+- Make each character feel distinct and original
+- Add unexpected quirks, motivations, or background elements
+- Think outside the box while still making the character believable
+
+CONTEXT AWARENESS:
+- If the prompt includes context from previous conversation, incorporate those specific elements
+- If the user referenced numbered ideas or specific preferences, build upon those
+- Don't ignore conversation context - use it to create more relevant and personalized content
+
+D&D RACE CONSTRAINTS:
+- Stick to standard D&D races: Human, Elf, Dwarf, Halfling, Gnome, Half-Elf, Half-Orc, Tiefling, Dragonborn, Aarakocra, Genasi, Goliath, Tabaxi, Triton, Warforged, etc. with a heavier weight towards more common races
+- Do NOT create insect races, alien species, or non-D&D creatures
+- If the user specifies a race, use that race or a standard D&D equivalent
+- Be creative with personality, background, and role, but stay within D&D lore
+
+You must fill out the template directly. Do not add any extra comments, introductions, or sign-offs. Your response should only contain the filled-out template."""
         
         # Choose the template based on the 'brief' flag
         template = NPC_TEMPLATE_BRIEF if input_spec.brief else NPC_TEMPLATE_FULL
@@ -64,6 +85,12 @@ Please create an NPC based on the following idea:
 ---
 USER PROMPT: "{input_spec.prompt}"
 ---
+
+CREATIVITY CHALLENGE: Make this character truly unique and memorable. Avoid obvious tropes and create something that will surprise players. Think about what would make this character stand out in a world full of fantasy characters.
+
+IMPORTANT: Use only standard D&D races and creatures. Be creative with personality, background, and role, but stay within D&D lore and setting.
+
+CONTEXT AWARENESS: If the prompt includes context from a previous conversation (like numbered ideas or user preferences), make sure to incorporate those specific elements into your character creation. Don't ignore the context - build upon it!
 
 Now, take that idea and fill out this template completely. Be creative and make the character come alive.
 
@@ -76,7 +103,7 @@ Now, take that idea and fill out this template completely. Be creative and make 
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            temperature=0.75, # Lowered slightly for more predictable formatting
+            temperature=0.9, # Increased for more creative and diverse outputs
             max_tokens=2500,
         )
         
