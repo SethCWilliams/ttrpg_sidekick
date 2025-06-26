@@ -44,7 +44,7 @@ def print_welcome():
     print("• /help - Show this help message")
     print("• /clear - Clear conversation history")
     print("• /world <name> - Set the campaign world (optional)")
-    print("• /brief - Toggle brief mode for next generation")
+    print("• /brief - Toggle between brief and full mode (brief is default)")
     print("• /quit or /exit - Exit the chat")
     print()
     print("Start chatting! (Type /help for commands)")
@@ -58,7 +58,7 @@ class SmartChatSession:
         self.world_name = world_name
         self.conversation_history = []
         self.router = Router()
-        self.brief_mode = False
+        self.brief_mode = True  # Default to brief mode for faster chat experience
         
     def add_message(self, role: str, content: str):
         """Add a message to the conversation history."""
